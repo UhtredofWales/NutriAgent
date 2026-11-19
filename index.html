@@ -53,7 +53,7 @@
                     }
                 }
             }
-        }
+        };
     </script>
 
     <style>
@@ -143,20 +143,20 @@
         <div class="flex items-center gap-2">
             <!-- Date Selector -->
             <div class="flex items-center bg-obsidian-850 rounded-xl p-0.5 border border-obsidian-700">
-                <button onclick="changeDate(-1)" class="p-1.5 hover:bg-obsidian-700 rounded-lg text-slate-400 hover:text-white transition" title="Dia anterior">
+                <button type="button" onclick="changeDate(-1)" class="p-1.5 hover:bg-obsidian-700 rounded-lg text-slate-400 hover:text-white transition" title="Dia anterior">
                     <i data-lucide="chevron-left" class="w-4 h-4"></i>
                 </button>
                 <div class="px-1.5 sm:px-2.5 flex items-center gap-1.5">
                     <i data-lucide="calendar" class="w-3.5 h-3.5 text-emerald-400 hidden sm:inline"></i>
                     <input type="date" id="activeDateInput" onchange="setDate(this.value)" class="bg-transparent text-xs font-mono font-semibold text-white focus:outline-none cursor-pointer" />
                 </div>
-                <button onclick="changeDate(1)" class="p-1.5 hover:bg-obsidian-700 rounded-lg text-slate-400 hover:text-white transition" title="Próximo dia">
+                <button type="button" onclick="changeDate(1)" class="p-1.5 hover:bg-obsidian-700 rounded-lg text-slate-400 hover:text-white transition" title="Próximo dia">
                     <i data-lucide="chevron-right" class="w-4 h-4"></i>
                 </button>
             </div>
 
             <!-- Google Login / User Profile Button -->
-            <button onclick="handleGoogleAuthClick()" id="googleAuthBtn" class="flex items-center gap-2 bg-obsidian-850 hover:bg-obsidian-700 border border-obsidian-700 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium text-slate-200 transition" title="Conectar Conta Google / Firebase">
+            <button type="button" onclick="handleGoogleAuthClick()" id="googleAuthBtn" class="flex items-center gap-2 bg-obsidian-850 hover:bg-obsidian-700 border border-obsidian-700 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium text-slate-200 transition" title="Conectar Conta Google / Firebase">
                 <span id="syncDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 <span id="authBtnLabel" class="hidden sm:inline font-mono text-[11px]">Entrar Google</span>
                 <i data-lucide="user-check" class="w-3.5 h-3.5 text-emerald-400 sm:hidden"></i>
@@ -166,23 +166,23 @@
 
     <!-- MOBILE NAVIGATION BAR (< lg screens) -->
     <nav class="lg:hidden bg-obsidian-950 border-b border-obsidian-700 px-2 py-1.5 grid grid-cols-5 gap-1 shrink-0 z-20">
-        <button onclick="setMobileView('chat')" id="mob-btn-chat" class="mob-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 transition">
+        <button type="button" onclick="setMobileView('chat')" id="mob-btn-chat" class="mob-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 transition">
             <i data-lucide="bot" class="w-4 h-4 mb-0.5"></i>
             <span>Agente</span>
         </button>
-        <button onclick="setMobileView('diary')" id="mob-btn-diary" class="mob-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium text-slate-400 hover:bg-obsidian-800 transition">
+        <button type="button" onclick="setMobileView('diary')" id="mob-btn-diary" class="mob-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium text-slate-400 hover:bg-obsidian-800 transition">
             <i data-lucide="clipboard-list" class="w-4 h-4 mb-0.5"></i>
             <span>Diário</span>
         </button>
-        <button onclick="setMobileView('analytics')" id="mob-btn-analytics" class="mob-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium text-slate-400 hover:bg-obsidian-800 transition">
+        <button type="button" onclick="setMobileView('analytics')" id="mob-btn-analytics" class="mob-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium text-slate-400 hover:bg-obsidian-800 transition">
             <i data-lucide="line-chart" class="w-4 h-4 mb-0.5"></i>
             <span>Analytics</span>
         </button>
-        <button onclick="setMobileView('database')" id="mob-btn-database" class="mob-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium text-slate-400 hover:bg-obsidian-800 transition">
+        <button type="button" onclick="setMobileView('database')" id="mob-btn-database" class="mob-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium text-slate-400 hover:bg-obsidian-800 transition">
             <i data-lucide="database" class="w-4 h-4 mb-0.5"></i>
             <span>Base</span>
         </button>
-        <button onclick="setMobileView('protocol')" id="mob-btn-protocol" class="mob-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium text-slate-400 hover:bg-obsidian-800 transition">
+        <button type="button" onclick="setMobileView('protocol')" id="mob-btn-protocol" class="mob-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium text-slate-400 hover:bg-obsidian-800 transition">
             <i data-lucide="sliders" class="w-4 h-4 mb-0.5"></i>
             <span>Protocolo</span>
         </button>
@@ -191,26 +191,26 @@
     <!-- MAIN SPLIT COCKPIT WORKSPACE -->
     <main class="flex-1 flex overflow-hidden relative">
 
-        <!-- LEFT / PRIMARY ANALYTICAL WORKSPACE (62% Desktop) -->
+        <!-- LEFT / PRIMARY ANALYTICAL WORKSPACE -->
         <section id="dashboardPane" class="hidden lg:flex flex-col w-full lg:w-[60%] xl:w-[64%] h-full overflow-hidden border-r border-obsidian-700 bg-obsidian-900">
-            
+
             <!-- Desktop Cockpit Sub-Navigation -->
             <div class="hidden lg:flex items-center justify-between px-5 pt-3 pb-0 border-b border-obsidian-700 bg-obsidian-950/70 shrink-0">
                 <div class="flex items-center gap-5">
-                    <button onclick="switchMainTab('diary')" id="tab-diary" class="main-tab pb-2.5 text-xs font-bold uppercase tracking-wider border-b-2 border-emerald-400 text-white flex items-center gap-2 transition">
+                    <button type="button" onclick="switchMainTab('diary')" id="tab-diary" class="main-tab pb-2.5 text-xs font-bold uppercase tracking-wider border-b-2 border-emerald-400 text-white flex items-center gap-2 transition">
                         <i data-lucide="activity" class="w-3.5 h-3.5 text-emerald-400"></i>
                         Diário & Telemetria
                     </button>
-                    <button onclick="switchMainTab('analytics')" id="tab-analytics" class="main-tab pb-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 transition">
+                    <button type="button" onclick="switchMainTab('analytics')" id="tab-analytics" class="main-tab pb-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 transition">
                         <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-electric-400"></i>
                         Performance Analytics
                     </button>
-                    <button onclick="switchMainTab('database')" id="tab-database" class="main-tab pb-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 transition">
+                    <button type="button" onclick="switchMainTab('database')" id="tab-database" class="main-tab pb-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 transition">
                         <i data-lucide="database" class="w-3.5 h-3.5 text-amber-400"></i>
                         Base Verificada
                         <span id="dbCountBadge" class="text-[10px] font-mono bg-obsidian-800 text-slate-300 px-1.5 py-0.5 rounded border border-obsidian-700">0</span>
                     </button>
-                    <button onclick="switchMainTab('protocol')" id="tab-protocol" class="main-tab pb-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 transition">
+                    <button type="button" onclick="switchMainTab('protocol')" id="tab-protocol" class="main-tab pb-2.5 text-xs font-semibold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 transition">
                         <i data-lucide="cpu" class="w-3.5 h-3.5 text-violet-400"></i>
                         Protocolo & Cloud
                     </button>
@@ -218,11 +218,11 @@
 
                 <!-- Quick Action Toolbar -->
                 <div class="flex items-center gap-2 mb-2">
-                    <button onclick="openWorkoutModal()" class="text-[11px] font-semibold bg-obsidian-850 hover:bg-obsidian-800 text-violet-400 border border-violet-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+                    <button type="button" onclick="openWorkoutModal()" class="text-[11px] font-semibold bg-obsidian-850 hover:bg-obsidian-800 text-violet-400 border border-violet-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
                         <i data-lucide="dumbbell" class="w-3.5 h-3.5"></i>
                         + Treino
                     </button>
-                    <button onclick="openAddFoodModal()" class="text-[11px] font-semibold bg-emerald-500 hover:bg-emerald-600 text-obsidian-950 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+                    <button type="button" onclick="openAddFoodModal()" class="text-[11px] font-semibold bg-emerald-500 hover:bg-emerald-600 text-obsidian-950 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
                         <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                         Novo Rótulo
                     </button>
@@ -236,10 +236,10 @@
                 <!-- TAB 1: DIÁRIO & TELEMETRIA EM TEMPO REAL                  -->
                 <!-- ========================================================= -->
                 <div id="view-diary" class="space-y-5">
-                    
-                    <!-- TOP 5 TELEMETRY KPI CARDS -->
-                    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3">
-                        
+
+                    <!-- TOP TELEMETRY KPI CARDS -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
+
                         <!-- KPI 1: Calorias Líquidas vs Meta -->
                         <div class="bg-obsidian-850 border border-obsidian-700 rounded-xl p-3.5 flex flex-col justify-between">
                             <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-400">
@@ -284,7 +284,7 @@
                         <div class="bg-obsidian-850 border border-obsidian-700 rounded-xl p-3.5 flex flex-col justify-between">
                             <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-400">
                                 <span>Proteína / Kg</span>
-                                <span id="kpiProtZoneBadge" class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-400">ALVO 2.0</span>
+                                <span id="kpiProtZoneBadge" class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400">ALVO 2.0</span>
                             </div>
                             <div class="mt-2">
                                 <div class="flex items-baseline gap-1.5">
@@ -292,7 +292,7 @@
                                     <span class="text-[11px] font-mono text-slate-400">g/kg</span>
                                 </div>
                                 <div class="text-[10px] font-mono text-slate-400 mt-0.5">
-                                    Total: <strong id="kpiProtTotal" class="text-white">0.0g</strong> / <span id="kpiProtTarget">160</span>g
+                                    Total: <strong id="kpiProtTotal" class="text-white">0.0g</strong> / <span id="kpiProtTarget">165</span>g
                                 </div>
                             </div>
                             <div class="w-full h-1.5 bg-obsidian-950 rounded-full overflow-hidden mt-2.5">
@@ -309,7 +309,7 @@
                             <div class="mt-2">
                                 <div class="flex items-baseline gap-1.5">
                                     <span id="kpiCarbTotal" class="text-xl font-metric font-bold text-electric-400">0.0</span>
-                                    <span class="text-[11px] font-mono text-slate-400">/ <span id="kpiCarbTarget">220</span>g</span>
+                                    <span class="text-[11px] font-mono text-slate-400">/ <span id="kpiCarbTarget">235</span>g</span>
                                 </div>
                                 <div class="text-[10px] font-mono text-slate-400 mt-0.5">
                                     Relativo: <span id="kpiCarbPerKg" class="text-slate-200">0.00</span> g/kg
@@ -329,7 +329,7 @@
                             <div class="mt-2">
                                 <div class="flex items-baseline gap-1.5">
                                     <span id="kpiFatTotal" class="text-xl font-metric font-bold text-amber-400">0.0</span>
-                                    <span class="text-[11px] font-mono text-slate-400">/ <span id="kpiFatTarget">65</span>g</span>
+                                    <span class="text-[11px] font-mono text-slate-400">/ <span id="kpiFatTarget">68</span>g</span>
                                 </div>
                                 <div class="text-[10px] font-mono text-slate-400 mt-0.5">
                                     Fibra est: <span id="kpiFiberEst" class="text-slate-200">0</span>g
@@ -344,7 +344,7 @@
                         <div class="col-span-2 sm:col-span-1 bg-obsidian-850 border border-obsidian-700 rounded-xl p-3.5 flex flex-col justify-between">
                             <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-400">
                                 <span>Biometria / Água</span>
-                                <button onclick="openBiometricsModal()" class="text-violet-400 hover:underline text-[10px]">Editar</button>
+                                <button type="button" onclick="openBiometricsModal()" class="text-violet-400 hover:underline text-[10px]">Editar</button>
                             </div>
                             <div class="mt-2 flex items-center justify-between sm:block">
                                 <div>
@@ -354,12 +354,12 @@
                                         <span id="kpiBf" class="text-[10px] font-mono text-violet-400 ml-1">13.5% BF</span>
                                     </div>
                                     <div class="text-[10px] font-mono text-electric-400 mt-0.5">
-                                        H2O: <span id="kpiWater">0</span> / <span id="kpiWaterTarget">3000</span>ml
+                                        H2O: <span id="kpiWater">0</span> / <span id="kpiWaterTarget">3200</span>ml
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-1 mt-1.5">
-                                    <button onclick="addWater(250)" class="px-2 py-0.5 rounded bg-electric-500/15 hover:bg-electric-500/25 text-electric-400 border border-electric-500/30 text-[10px] font-mono font-bold transition">+250</button>
-                                    <button onclick="addWater(500)" class="px-2 py-0.5 rounded bg-electric-500/15 hover:bg-electric-500/25 text-electric-400 border border-electric-500/30 text-[10px] font-mono font-bold transition">+500</button>
+                                    <button type="button" onclick="addWater(250)" class="px-2 py-0.5 rounded bg-electric-500/15 hover:bg-electric-500/25 text-electric-400 border border-electric-500/30 text-[10px] font-mono font-bold transition">+250</button>
+                                    <button type="button" onclick="addWater(500)" class="px-2 py-0.5 rounded bg-electric-500/15 hover:bg-electric-500/25 text-electric-400 border border-electric-500/30 text-[10px] font-mono font-bold transition">+500</button>
                                 </div>
                             </div>
                         </div>
@@ -460,7 +460,7 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 <span id="workoutTotalBadge" class="text-xs font-mono font-bold text-violet-400">0 kcal gastas</span>
-                                <button onclick="openWorkoutModal()" class="text-[11px] font-semibold bg-violet-500/15 hover:bg-violet-500/25 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg transition">
+                                <button type="button" onclick="openWorkoutModal()" class="text-[11px] font-semibold bg-violet-500/15 hover:bg-violet-500/25 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-lg transition">
                                     + Registrar Sessão
                                 </button>
                             </div>
@@ -480,7 +480,7 @@
                 <!-- TAB 2: PERFORMANCE ANALYTICS (CHART.JS TELEMETRY)         -->
                 <!-- ========================================================= -->
                 <div id="view-analytics" class="hidden space-y-5">
-                    
+
                     <!-- Summary Performance Metrics -->
                     <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
                         <div class="bg-obsidian-850 border border-obsidian-700 rounded-xl p-3.5">
@@ -626,7 +626,7 @@
                 <!-- TAB 4: PROTOCOLO BIOMÉTRICO & DEPLOY (VERCEL / FIREBASE)  -->
                 <!-- ========================================================= -->
                 <div id="view-protocol" class="hidden space-y-5">
-                    
+
                     <!-- Metabolic & Protocol Calculator -->
                     <div class="bg-obsidian-850 border border-obsidian-700 rounded-xl p-5 space-y-4">
                         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -634,7 +634,7 @@
                                 <h2 class="font-bold text-base text-white">Engenharia Metabólica & Protocolo</h2>
                                 <p class="text-xs text-slate-400">Calcule TMB (Mifflin-St Jeor), TDEE e ajuste automaticamente suas metas por fase.</p>
                             </div>
-                            <button onclick="recalculateProtocolTargets()" class="bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 border border-violet-500/40 text-xs font-mono font-bold px-3 py-1.5 rounded-lg transition">
+                            <button type="button" onclick="recalculateProtocolTargets()" class="bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 border border-violet-500/40 text-xs font-mono font-bold px-3 py-1.5 rounded-lg transition">
                                 Recalcular Metas pelo Perfil
                             </button>
                         </div>
@@ -745,13 +745,13 @@
                         <div class="bg-obsidian-950 rounded-xl p-4 border border-obsidian-700 space-y-3">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-semibold text-slate-300">Configuração de Produção (Vercel / Local)</span>
-                                <button onclick="copyDeployTemplate()" class="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                                <button type="button" onclick="copyDeployTemplate()" class="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
                                     <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar firebaseConfig Snippet
                                 </button>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                                 <input type="password" id="customGeminiKeyInput" placeholder="Gemini API Key (AIzaSy...)" class="sm:col-span-2 px-3 py-2 bg-obsidian-900 border border-obsidian-700 rounded-lg text-xs font-mono text-white focus:outline-none focus:border-emerald-500" />
-                                <button onclick="applyCustomApiKey()" class="bg-emerald-500 hover:bg-emerald-600 text-obsidian-950 font-bold text-xs py-2 px-4 rounded-lg transition">
+                                <button type="button" onclick="applyCustomApiKey()" class="bg-emerald-500 hover:bg-emerald-600 text-obsidian-950 font-bold text-xs py-2 px-4 rounded-lg transition">
                                     Aplicar API Key
                                 </button>
                             </div>
@@ -767,7 +767,7 @@
         <!-- RIGHT COLUMN: AI SPORTS NUTRITION & PERFORMANCE AGENT     -->
         <!-- ========================================================= -->
         <section id="chatPane" class="flex flex-col w-full lg:w-[40%] xl:w-[36%] h-full bg-obsidian-950">
-            
+
             <!-- Agent Telemetry Header -->
             <div class="px-4 py-2.5 border-b border-obsidian-700 bg-obsidian-900/90 flex items-center justify-between shrink-0">
                 <div class="flex items-center gap-2.5">
@@ -804,7 +804,7 @@
             <div id="voiceLookupPanel" class="hidden px-3.5 py-2.5 bg-obsidian-900 border-b border-electric-500/30 shrink-0 space-y-2">
                 <div class="flex items-center justify-between">
                     <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-electric-400 flex items-center gap-1.5">
-                        <i data-lucide="mic-search" class="w-3.5 h-3.5"></i> Modo Consulta & Busca Nutricional por Voz
+                        <i data-lucide="search" class="w-3.5 h-3.5"></i> Modo Consulta & Busca Nutricional por Voz
                     </span>
                     <button type="button" onclick="toggleVoiceLookupMode(false)" class="text-[10px] font-mono text-slate-400 hover:text-white">Fechar</button>
                 </div>
@@ -818,8 +818,6 @@
                     </button>
                 </div>
                 <div id="lookupResultsContainer" class="max-h-48 overflow-y-auto space-y-1.5"></div>
-            </div>
-                <div id="lookupResultsContainer" class="max-h-44 overflow-y-auto space-y-1.5"></div>
             </div>
 
             <!-- Chat Messages Feed -->
@@ -849,25 +847,25 @@
 
             <!-- Quick Telemetry Command Chips -->
             <div class="px-3 py-2 bg-obsidian-900 border-t border-obsidian-700 flex items-center gap-1.5 overflow-x-auto shrink-0 no-scrollbar">
-                <button onclick="sendQuickPrompt('Analise a qualidade nutricional, micronutrientes e marcas dos alimentos que comi hoje e aponte melhorias nas misturas.')" class="shrink-0 text-[11px] font-mono font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+                <button type="button" onclick="sendQuickPrompt('Analise a qualidade nutricional, micronutrientes e marcas dos alimentos que comi hoje e aponte melhorias nas misturas.')" class="shrink-0 text-[11px] font-mono font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
                     <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Qualidade & Misturas
                 </button>
-                <button onclick="sendQuickPrompt('Explique minhas métricas atuais (TMB, TDEE, saldo diário e mensal, g/kg de proteína e split de macros) e dê alertas práticos para o meu protocolo.')" class="shrink-0 text-[11px] font-mono font-semibold bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+                <button type="button" onclick="sendQuickPrompt('Explique minhas métricas atuais (TMB, TDEE, saldo diário e mensal, g/kg de proteína e split de macros) e dê alertas práticos para o meu protocolo.')" class="shrink-0 text-[11px] font-mono font-semibold bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 border border-violet-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
                     <i data-lucide="activity" class="w-3.5 h-3.5"></i> Explicar Métricas
                 </button>
-                <button onclick="toggleVoiceLookupMode()" id="voiceLookupChipBtn" class="shrink-0 text-[11px] font-mono font-semibold bg-electric-500/10 hover:bg-electric-500/20 text-electric-400 border border-electric-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+                <button type="button" onclick="toggleVoiceLookupMode()" id="voiceLookupChipBtn" class="shrink-0 text-[11px] font-mono font-semibold bg-electric-500/10 hover:bg-electric-500/20 text-electric-400 border border-electric-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
                     <i data-lucide="search" class="w-3.5 h-3.5"></i> Consultar / Voz
                 </button>
-                <button onclick="triggerImageUpload('label')" class="shrink-0 text-[11px] font-mono font-semibold bg-obsidian-850 hover:bg-obsidian-800 text-amber-400 border border-amber-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+                <button type="button" onclick="triggerImageUpload('label')" class="shrink-0 text-[11px] font-mono font-semibold bg-obsidian-850 hover:bg-obsidian-800 text-amber-400 border border-amber-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
                     <i data-lucide="scan-line" class="w-3.5 h-3.5"></i> OCR Rótulo
                 </button>
-                <button onclick="triggerImageUpload('plate')" class="shrink-0 text-[11px] font-mono font-semibold bg-obsidian-850 hover:bg-obsidian-800 text-emerald-400 border border-emerald-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+                <button type="button" onclick="triggerImageUpload('plate')" class="shrink-0 text-[11px] font-mono font-semibold bg-obsidian-850 hover:bg-obsidian-800 text-emerald-400 border border-emerald-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
                     <i data-lucide="camera" class="w-3.5 h-3.5"></i> Foto Prato
                 </button>
-                <button onclick="sendQuickPrompt('Lançar meu Shake Pós-Treino')" class="shrink-0 text-[11px] font-mono bg-obsidian-850 hover:bg-obsidian-800 text-slate-200 border border-obsidian-700 px-2.5 py-1.5 rounded-lg transition">
+                <button type="button" onclick="sendQuickPrompt('Lançar meu Shake Pós-Treino')" class="shrink-0 text-[11px] font-mono bg-obsidian-850 hover:bg-obsidian-800 text-slate-200 border border-obsidian-700 px-2.5 py-1.5 rounded-lg transition">
                     ⚡ Shake Pós-Treino
                 </button>
-                <button onclick="sendQuickPrompt('Bebi 500ml de água')" class="shrink-0 text-[11px] font-mono bg-obsidian-850 hover:bg-obsidian-800 text-electric-400 border border-electric-500/30 px-2.5 py-1.5 rounded-lg transition">
+                <button type="button" onclick="sendQuickPrompt('Bebi 500ml de água')" class="shrink-0 text-[11px] font-mono bg-obsidian-850 hover:bg-obsidian-800 text-electric-400 border border-electric-500/30 px-2.5 py-1.5 rounded-lg transition">
                     +500ml H2O
                 </button>
             </div>
@@ -892,7 +890,7 @@
                         <p class="text-[11px] text-slate-400 mt-0.5 truncate max-w-[190px]" id="imageFileName">foto.jpg</p>
                     </div>
                 </div>
-                <button onclick="clearAttachedImage()" class="p-1.5 hover:bg-obsidian-700 rounded-lg text-slate-400 hover:text-white transition">
+                <button type="button" onclick="clearAttachedImage()" class="p-1.5 hover:bg-obsidian-700 rounded-lg text-slate-400 hover:text-white transition">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -900,7 +898,7 @@
             <!-- Chat Input Form -->
             <form onsubmit="handleChatSubmit(event)" class="p-3 bg-obsidian-900 border-t border-obsidian-700 flex items-end gap-2 shrink-0">
                 <input type="file" id="imageFileInput" accept="image/*" class="hidden" onchange="handleImageFileSelected(event)" />
-                
+
                 <button type="button" onclick="triggerImageUpload('auto')" class="p-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-emerald-400 transition shrink-0" title="Anexar foto de prato ou tabela nutricional">
                     <i data-lucide="camera" class="w-5 h-5"></i>
                 </button>
@@ -922,7 +920,7 @@
     </main>
 
     <!-- ===================================================================== -->
-    <!-- MODALS (FOOD DB, QUICK LOG, WORKOUT, BIOMETRICS, SAVE TEMPLATE)       -->
+    <!-- MODALS (FOOD DB, QUICK LOG, WORKOUT, BIOMETRICS)                      -->
     <!-- ===================================================================== -->
 
     <!-- MODAL 1: CADASTRAR / EDITAR ALIMENTO NA BASE -->
@@ -930,7 +928,7 @@
         <div class="bg-obsidian-850 border border-obsidian-700 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b border-obsidian-700 pb-3">
                 <h3 id="foodModalTitle" class="font-bold text-sm text-white">Cadastrar Produto / Rótulo</h3>
-                <button onclick="closeFoodModal()" class="p-1 text-slate-400 hover:text-white rounded-lg">
+                <button type="button" onclick="closeFoodModal()" class="p-1 text-slate-400 hover:text-white rounded-lg">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -994,7 +992,7 @@
         <div class="bg-obsidian-850 border border-obsidian-700 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b border-obsidian-700 pb-3">
                 <h3 id="quickLogTitle" class="font-bold text-sm text-white">Lançar no Diário</h3>
-                <button onclick="closeQuickLogModal()" class="p-1 text-slate-400 hover:text-white rounded-lg">
+                <button type="button" onclick="closeQuickLogModal()" class="p-1 text-slate-400 hover:text-white rounded-lg">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -1040,7 +1038,7 @@
                     <i data-lucide="dumbbell" class="w-4 h-4 text-violet-400"></i>
                     Registrar Sessão de Treino
                 </h3>
-                <button onclick="document.getElementById('workoutModal').classList.add('hidden')" class="p-1 text-slate-400 hover:text-white">
+                <button type="button" onclick="document.getElementById('workoutModal').classList.add('hidden')" class="p-1 text-slate-400 hover:text-white">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -1077,7 +1075,7 @@
         <div class="bg-obsidian-850 border border-obsidian-700 rounded-2xl max-w-xs w-full p-5 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b border-obsidian-700 pb-3">
                 <h3 class="font-bold text-sm text-white">Biometria do Dia</h3>
-                <button onclick="document.getElementById('biometricsModal').classList.add('hidden')" class="p-1 text-slate-400 hover:text-white">
+                <button type="button" onclick="document.getElementById('biometricsModal').classList.add('hidden')" class="p-1 text-slate-400 hover:text-white">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -1104,7 +1102,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // =========================================================================
         // 1. CONFIGURAÇÃO FIREBASE & API GEMINI
@@ -1174,7 +1172,6 @@
             }
         ];
 
-        // Realistic 6-day historical data so Analytics charts look rich immediately
         function buildSeedLogs() {
             const historyPattern = [
                 { daysAgo: 6, p: 164, c: 215, g: 62, kcal: 2074 },
@@ -1194,7 +1191,6 @@
                     baseGrams: 850, baseKcal: d.kcal, baseProt: d.p, baseCarb: d.c, baseFat: d.g
                 });
             });
-            // Today starter breakfast so user sees immediate live telemetry
             logs.push(
                 { id: 'today-1', date: TODAY_ISO, meal: 'Café da Manhã', name: 'Ovo Inteiro Cozido/Mexido', brand: 'Tabela TACO', grams: 150, kcal: 219, prot: 18.9, carb: 0.9, fat: 14.4, baseGrams: 50, baseKcal: 73, baseProt: 6.3, baseCarb: 0.3, baseFat: 4.8 },
                 { id: 'today-2', date: TODAY_ISO, meal: 'Café da Manhã', name: 'Pão de Forma Integral 100%', brand: 'Wickbold', grams: 50, kcal: 118, prot: 5.6, carb: 19.0, fat: 1.8, baseGrams: 50, baseKcal: 118, baseProt: 5.6, baseCarb: 19.0, baseFat: 1.8 }
@@ -1259,7 +1255,7 @@
         }
 
         function computeMonthlyCaloriesSummary(dateIso = state.activeDate) {
-            const prefix = String(dateIso || TODAY_ISO).slice(0, 7); // YYYY-MM
+            const prefix = String(dateIso || TODAY_ISO).slice(0, 7);
             const daysInMonth = getDaysInActiveMonth(dateIso);
             const currentDayOfMonth = Math.max(1, Math.min(daysInMonth, Number(String(dateIso || TODAY_ISO).slice(8, 10)) || 1));
 
@@ -1387,7 +1383,8 @@
 
                 onSnapshot(collection(userRoot, 'workouts'), (snap) => {
                     if (!snap.empty) {
-                        state.workouts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        const cloudWorkouts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        state.workouts = cloudWorkouts;
                         renderDiaryDashboard();
                         renderAnalyticsCharts();
                     }
@@ -1695,10 +1692,11 @@
         // =========================================================================
         async function callGeminiNutritionAgent(userText, imageObj, audioObj = null) {
             const apiKey = USER_GEMINI_KEY || "";
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            if (!apiKey) {
+                throw new Error('Missing Gemini API key');
+            }
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-            const preferredMeal = document.getElementById('defaultMealSelect').value;
-            const resolvedMeal = preferredMeal === 'Auto' ? getAutoMealByHour() : preferredMeal;
             const currentWeight = state.dailyMetrics[state.activeDate]?.weight || state.profile.weight;
 
             const dbSummary = state.foods.slice(0, 50).map(f =>
@@ -1731,7 +1729,7 @@
                 : '  * Nenhuma refeição lançada ainda hoje.';
 
             const systemPrompt = `Você é o NutriAgent PRO, um Especialista Dedicado em Nutrição Esportiva Clínica, Bioquímica Nutricional e Fisiologia do Exercício.
-Seu papel é combinar precisão matemática de macros com inteligência clínica e prática: explicar métricas quando perguntado ou relevante, emitir alertas de aderência/recuperação/hidratação, e avaliar a QUALIDADE dos alimentos, MARCAS, MICRONUTRIENTES (ferro, zinco, cálcio, sódio, fibras, ômega-3, aminoácidos/leucina) e COMBINAÇÕES/MISTURAS nas refeições.
+Seu papel é combinar precisão matemática de macros com inteligência clínica e prática: explicar métricas quando perguntado ou relevante, emitir alertas de aderência/recuperação/hidratação, e avaliar a QUALIDADE dos alimentos, MARCAS, MICRONUTRIENTES e COMBINAÇÕES/MISTURAS nas refeições.
 
 TELEMETRIA ATUAL DO ATLETA (${state.activeDate}):
 - Perfil: ${state.profile.sex}, ${state.profile.age} anos, ${state.profile.height} cm | Peso: ${currentWeight} kg | BF: ${dayMetrics.bf || 'N/I'}% | Fase: ${state.profile.phase}
@@ -1749,16 +1747,6 @@ ${dbSummary}
 
 REFEIÇÕES COMPOSTAS / TEMPLATES SALVOS:
 ${templatesSummary}
-
-DIRETRIZES OPERACIONAIS:
-1. RIGOR DE MARCA E GRAMATURA PARA LANÇAMENTOS: Quando o usuário quiser lançar um alimento sem marca ou gramatura crítica, pergunte objetivamente antes de lançar.
-2. ESPECIALISTA EM QUALIDADE, MARCAS E MISTURAS: Sempre que o usuário pedir análise, insights, explicação de métricas ou lançar refeições/marcas, avalie:
-   - Qualidade do alimento e da marca (perfil de aminoácidos/leucina, grau de processamento, densidade nutricional, fonte TACO vs rótulo industrializado).
-   - Sinergias e conflitos nas misturas (ex: ferro não-heme com vitamina C vs inibidores como excesso de cálcio/fitatos/café na mesma janela; fibras e gorduras retardando esvaziamento gástrico vs necessidade de carboidrato/proteína rápida no pós-treino; densidade calórica em cutting/bulking).
-   - Explicação clara e didática das métricas (TMB, TDEE, Saldo Diário/Mensal, Ritmo Médio, g/kg, Split) conectada ao objetivo.
-3. OCR DE TABELA NUTRICIONAL: Extraia porção base (g/ml), kcal, prot, carb e gord com exatidão, salve em "foodsToSaveToDatabase" e pergunte a gramatura consumida se não informada.
-4. TEMPLATES, TREINOS, ÁGUA E BIOIMPEDÂNCIA: Preencha "itemsToLog", "workoutToLog", "waterMlToAdd", "bodyWeightKg" e "bodyFatPct" conforme o caso.
-5. Preencha também "specialistHighlight" (um insight/alerta curto e cirúrgico de 1-2 frases para o painel do especialista) e "specialistAlertType" ("info" | "warning" | "success").
 
 Retorne ESTRITAMENTE o JSON conforme o schema.`;
 
@@ -2147,15 +2135,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             };
         }
 
-        function buildOfflineFallbackResponse(text, imageObj) {
-            if (imageObj) {
-                return imageObj.intent === 'label'
-                    ? 'Recebi a foto do rótulo. Para salvar com exatidão sem conexão com a IA, informe ou cadastre na aba Base Verificada: nome, marca, porção base (g/ml), calorias, proteínas, carboidratos e gorduras.'
-                    : 'Recebi a foto do prato. Quais alimentos você identificou, qual a marca (quando houver rótulo) e quantas gramas de cada item você consumiu?';
-            }
-            return 'Para lançar com exatidão sem a API Gemini ativa, informe alimento, marca e gramatura, ou consulte os dias e alimentos já registrados.';
-        }
-
         function appendUserMessage(text, imageObj) {
             const feed = document.getElementById('chatMessages');
             if (!feed) return;
@@ -2428,7 +2407,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                             speakAgentReply(res.reply);
                         } catch (err) {
                             removeTypingIndicator(typingId);
-                            appendAgentMessage('Não foi possível processar o áudio agora.', [], [], null);
+                            appendAgentMessage('Não foi possível processar o áudio agora. Configure sua chave Gemini em Protocolo & Cloud para áudio direto.', [], [], null);
                         }
                     };
                     reader.readAsDataURL(blob);
@@ -2696,7 +2675,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
 
             const alerts = [];
 
-            // 1. Protein g/kg clinical alert
             if (protPerKg >= 1.8) {
                 alerts.push({
                     title: `Proteína em zona ótima (${protPerKg.toFixed(2)} g/kg)`,
@@ -2716,7 +2694,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 });
             }
 
-            // 2. Daily & Monthly Caloric Pace Alert
             const expectedMonthByToday = state.targets.kcal * monthSummary.currentDayOfMonth;
             const monthPaceDelta = monthSummary.netKcal - expectedMonthByToday;
             if (Math.abs(monthPaceDelta) <= state.targets.kcal * 0.8) {
@@ -2745,7 +2722,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 });
             }
 
-            // 3. Hydration alert
             const waterPct = Math.round(((metrics.water || 0) / Math.max(1, state.targets.water)) * 100);
             if (waterPct < 60) {
                 alerts.push({
@@ -2757,7 +2733,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 });
             }
 
-            // 4. Custom specialist insight from latest Gemini response
             if (state.specialistDeepNote && state.specialistDeepNote.date === state.activeDate) {
                 alerts.push({
                     title: `Parecer do Especialista (${state.specialistDeepNote.updatedAt})`,
@@ -2778,7 +2753,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 </div>
             `).join('');
 
-            // Food & Brand Quality + Meal Combinations
             const mealAnalyses = MEAL_CATEGORIES
                 .map(m => analyzeMealCombination(m, dayLogs.filter(l => l.meal === m)))
                 .filter(Boolean);
@@ -2842,7 +2816,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             const t = state.targets;
             const monthSummary = computeMonthlyCaloriesSummary(state.activeDate);
 
-            // Header Telemetry
             const { bmr, tdee } = computeMetabolicRates();
             document.getElementById('hdrTmb').textContent = bmr;
             document.getElementById('hdrTdee').textContent = tdee;
@@ -2852,14 +2825,12 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             const phaseLabels = { CUTTING: 'CUTTING (-20%)', RECOMP: 'RECOMPOSIÇÃO', MAINTENANCE: 'MANUTENÇÃO', BULKING: 'LEAN BULK (+12%)' };
             document.getElementById('phaseBadge').textContent = phaseLabels[state.profile.phase] || 'RECOMPOSIÇÃO';
 
-            // KPI 1: Daily Net Kcal
             document.getElementById('kpiNetKcal').textContent = netKcal;
             document.getElementById('kpiTargetKcal').textContent = t.kcal;
             document.getElementById('kpiInKcal').textContent = Math.round(totals.kcal);
             document.getElementById('kpiOutKcal').textContent = `-${Math.round(burnedKcal)}`;
             document.getElementById('kpiKcalBar').style.width = `${Math.min(100, Math.max(0, (netKcal / (t.kcal || 1)) * 100))}%`;
 
-            // KPI 1B: Monthly Accumulated Net Kcal vs Monthly Target
             document.getElementById('kpiMonthTag').textContent = monthSummary.prefix.slice(5) + '/' + monthSummary.prefix.slice(2, 4);
             document.getElementById('kpiMonthNetKcal').textContent = monthSummary.netKcal;
             document.getElementById('kpiMonthTargetKcal').textContent = monthSummary.targetMonthlyKcal;
@@ -2873,7 +2844,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             }
             document.getElementById('kpiMonthKcalBar').style.width = `${Math.min(100, Math.max(0, (monthSummary.netKcal / (monthSummary.targetMonthlyKcal || 1)) * 100))}%`;
 
-            // Daily & Monthly Telemetry Banner
             const dailyDiff = t.kcal - netKcal;
             document.getElementById('bannerDailyTargetKcal').textContent = `${t.kcal} kcal`;
             const dailyDiffEl = document.getElementById('bannerDailyDiffKcal');
@@ -2883,13 +2853,11 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             document.getElementById('bannerMonthlyTargetKcal').textContent = `${monthSummary.targetMonthlyKcal} kcal`;
             document.getElementById('bannerMonthlyPaceKcal').textContent = `${monthSummary.avgDailyPace} kcal/d`;
 
-            // KPI 2: Protein g/kg
             document.getElementById('kpiProtPerKg').textContent = protPerKg;
             document.getElementById('kpiProtTotal').textContent = `${totals.prot.toFixed(1)}g`;
             document.getElementById('kpiProtTarget').textContent = t.prot;
             document.getElementById('kpiProtBar').style.width = `${Math.min(100, (totals.prot / (t.prot || 1)) * 100)}%`;
 
-            // Caloric Split %
             const macroKcalSum = (totals.prot * 4) + (totals.carb * 4) + (totals.fat * 9);
             const pPct = macroKcalSum > 0 ? Math.round(((totals.prot * 4) / macroKcalSum) * 100) : 0;
             const cPct = macroKcalSum > 0 ? Math.round(((totals.carb * 4) / macroKcalSum) * 100) : 0;
@@ -2904,21 +2872,18 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 document.getElementById('splitBarFat').style.width = `${gPct}%`;
             }
 
-            // KPI 3: Carbs
             document.getElementById('kpiCarbTotal').textContent = totals.carb.toFixed(1);
             document.getElementById('kpiCarbTarget').textContent = t.carb;
             document.getElementById('kpiCarbPct').textContent = `${cPct}%`;
             document.getElementById('kpiCarbPerKg').textContent = (totals.carb / bodyWeight).toFixed(2);
             document.getElementById('kpiCarbBar').style.width = `${Math.min(100, (totals.carb / (t.carb || 1)) * 100)}%`;
 
-            // KPI 4: Fats & Estimated Fiber
             document.getElementById('kpiFatTotal').textContent = totals.fat.toFixed(1);
             document.getElementById('kpiFatTarget').textContent = t.fat;
             document.getElementById('kpiFatPct').textContent = `${gPct}%`;
             document.getElementById('kpiFiberEst').textContent = Math.round(totals.carb * 0.11);
             document.getElementById('kpiFatBar').style.width = `${Math.min(100, (totals.fat / (t.fat || 1)) * 100)}%`;
 
-            // KPI 5: Biometrics & Water
             document.getElementById('kpiWeight').textContent = Number(bodyWeight).toFixed(1);
             document.getElementById('kpiBf').textContent = metrics.bf ? `${Number(metrics.bf).toFixed(1)}% BF` : '';
             document.getElementById('kpiWater').textContent = metrics.water || 0;
@@ -2927,7 +2892,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             renderDayHistoryBrowser();
             renderSpecialistPanel();
 
-            // Workouts List
             document.getElementById('workoutTotalBadge').textContent = `-${Math.round(burnedKcal)} kcal ativas`;
             const wkContainer = document.getElementById('workoutsListContainer');
             if (dayWorkouts.length === 0) {
@@ -2942,7 +2906,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                         </div>
                         <div class="flex items-center gap-3">
                             <span class="font-mono font-bold text-violet-400">-${w.kcal} kcal</span>
-                            <button onclick="deleteWorkout('${w.id}')" class="text-slate-500 hover:text-rose-400 transition">
+                            <button type="button" onclick="deleteWorkout('${w.id}')" class="text-slate-500 hover:text-rose-400 transition">
                                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                             </button>
                         </div>
@@ -2950,7 +2914,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 `).join('');
             }
 
-            // Meal Tables
             const container = document.getElementById('mealsContainer');
             container.innerHTML = MEAL_CATEGORIES.map(mealName => {
                 const items = dayLogs.filter(l => l.meal === mealName);
@@ -2985,7 +2948,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                                             <div class="text-[10px] font-mono text-slate-400">${escapeHtml(item.brand)}</div>
                                         </td>
                                         <td class="py-2.5 px-2.5 text-right font-mono">
-                                            <button onclick="openEditLogGrams('${item.id}')" class="font-bold text-slate-200 hover:text-emerald-400 underline decoration-dotted underline-offset-2" title="Editar gramatura">${item.grams}g</button>
+                                            <button type="button" onclick="openEditLogGrams('${item.id}')" class="font-bold text-slate-200 hover:text-emerald-400 underline decoration-dotted underline-offset-2" title="Editar gramatura">${item.grams}g</button>
                                         </td>
                                         <td class="py-2.5 px-2.5 text-right font-mono font-bold text-white">${Math.round(item.kcal)}</td>
                                         <td class="py-2.5 px-2.5 text-right font-mono font-semibold text-emerald-400">${item.prot}g</td>
@@ -2993,7 +2956,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                                         <td class="py-2.5 px-2.5 text-right font-mono text-amber-400">${item.fat}g</td>
                                         <td class="py-2.5 px-2.5 text-right font-mono text-[10px] text-slate-400 hidden sm:table-cell">${density}</td>
                                         <td class="py-2.5 px-3 text-right">
-                                            <button onclick="deleteMealLog('${item.id}')" class="p-1 text-slate-500 hover:text-rose-400 rounded transition">
+                                            <button type="button" onclick="deleteMealLog('${item.id}')" class="p-1 text-slate-500 hover:text-rose-400 rounded transition">
                                                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                             </button>
                                         </td>
@@ -3015,7 +2978,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                                 <span class="text-electric-400 hidden sm:inline">C:${mealCarb.toFixed(1)}g</span>
                                 <span class="text-amber-400 hidden sm:inline">G:${mealFat.toFixed(1)}g</span>
                                 <span class="font-bold text-white bg-obsidian-800 px-2 py-0.5 rounded border border-obsidian-700">${Math.round(mealKcal)} kcal</span>
-                                ${items.length > 0 ? `<button onclick="saveMealAsTemplate('${mealName}')" class="text-[10px] text-slate-400 hover:text-emerald-400" title="Salvar refeição como Combo Favorito"><i data-lucide="bookmark-plus" class="w-3.5 h-3.5"></i></button>` : ''}
+                                ${items.length > 0 ? `<button type="button" onclick="saveMealAsTemplate('${mealName}')" class="text-[10px] text-slate-400 hover:text-emerald-400" title="Salvar refeição como Combo Favorito"><i data-lucide="bookmark-plus" class="w-3.5 h-3.5"></i></button>` : ''}
                             </div>
                         </div>
                         ${bodyHtml}
@@ -3042,7 +3005,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                         </div>
                         <div class="pt-2 border-t border-obsidian-800 flex items-center justify-between font-mono text-[11px]">
                             <span><strong class="text-white">${Math.round(sum.kcal)} kcal</strong> • <strong class="text-emerald-400">${sum.prot.toFixed(1)}g P</strong></span>
-                            <button onclick="applyMealTemplate('${tpl.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 font-bold transition">
+                            <button type="button" onclick="applyMealTemplate('${tpl.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 font-bold transition">
                                 + Lançar Combo
                             </button>
                         </div>
@@ -3180,6 +3143,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                     baseGrams: i.baseGrams, baseKcal: i.baseKcal, baseProt: i.baseProt, baseCarb: i.baseCarb, baseFat: i.baseFat
                 }))
             });
+            saveStateToLocal();
             renderTemplates();
             showToast(`Salvo como template: "${tplName}"`);
         };
@@ -3232,9 +3196,9 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                     </td>
                     <td class="py-2.5 px-3.5 text-right">
                         <div class="flex items-center justify-end gap-1.5">
-                            <button onclick="openQuickLogFromDb('${f.id}')" class="px-2 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono font-bold transition">+ Lançar</button>
-                            <button onclick="openEditFoodModal('${f.id}')" class="p-1 text-slate-400 hover:text-white rounded"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
-                            <button onclick="deleteFoodItem('${f.id}')" class="p-1 text-slate-400 hover:text-rose-400 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                            <button type="button" onclick="openQuickLogFromDb('${f.id}')" class="px-2 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono font-bold transition">+ Lançar</button>
+                            <button type="button" onclick="openEditFoodModal('${f.id}')" class="p-1 text-slate-400 hover:text-white rounded"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                            <button type="button" onclick="deleteFoodItem('${f.id}')" class="p-1 text-slate-400 hover:text-rose-400 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                         </div>
                     </td>
                 </tr>`;
@@ -3278,7 +3242,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 weights.push(w);
             });
 
-            // Update Summary Analytics KPIs
             const avgKcal = daysWithData > 0 ? Math.round(sumKcal / daysWithData) : 0;
             const avgProt = daysWithData > 0 ? (sumProt / daysWithData) : 0;
             const monthSummary = computeMonthlyCaloriesSummary(state.activeDate);
@@ -3301,6 +3264,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             const workoutCountEl = document.getElementById('statWorkoutCount');
             if (weeklyBurnEl) weeklyBurnEl.textContent = `${weeklyBurn} kcal`;
             if (workoutCountEl) workoutCountEl.textContent = `${weeklyWorkouts.length} sessões nos últimos 7d`;
+
             const ctx1 = document.getElementById('weeklyMacrosChart')?.getContext('2d');
             if (ctx1) {
                 if (state.charts.weekly) state.charts.weekly.destroy();
@@ -3327,7 +3291,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 });
             }
 
-            // Chart 2: Weight Curve & Moving Average
             const movingAvg = weights.map((_, idx, arr) => {
                 const slice = arr.slice(0, idx + 1).filter(v => v !== null);
                 return slice.length ? Number((slice.reduce((a, b) => a + b, 0) / slice.length).toFixed(2)) : null;
@@ -3357,7 +3320,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 });
             }
 
-            // Chart 3: Protein & Kcal Distribution by Meal Window (Active Date)
             const activeLogs = state.logs.filter(l => l.date === state.activeDate);
             const mealProtData = MEAL_CATEGORIES.map(m => activeLogs.filter(l => l.meal === m).reduce((s, i) => s + Number(i.prot || 0), 0));
             const mealCarbData = MEAL_CATEGORIES.map(m => activeLogs.filter(l => l.meal === m).reduce((s, i) => s + Number(i.carb || 0), 0));
@@ -3386,7 +3348,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 });
             }
 
-            // Chart 4: Monthly Daily Net Calories vs Daily Target
             const monthPrefix = monthSummary.prefix;
             const monthDayLabels = [];
             const monthDailyNet = [];
@@ -3529,7 +3490,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             showToast('Treino adicionado ao balanço energético!');
         };
 
-        // Food DB Modal
         window.openAddFoodModal = function() {
             document.getElementById('foodModalTitle').textContent = 'Cadastrar Produto / Rótulo';
             document.getElementById('editFoodId').value = '';
@@ -3581,7 +3541,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             showToast('Rótulo salvo no catálogo!');
         };
 
-        // Quick Log / Edit Grams Modal
         let activeQuickLogRef = null;
 
         window.openQuickLogFromDb = function(foodId) {
@@ -3673,7 +3632,6 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             document.getElementById('quickLogModal').classList.add('hidden');
         };
 
-        // Protocol Form & Calculator
         function populateProtocolForm() {
             const daysInMonth = getDaysInActiveMonth(state.activeDate);
             document.getElementById('inputTargetKcal').value = state.targets.kcal;
@@ -3753,7 +3711,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
 
         window.applyCustomApiKey = function() {
             USER_GEMINI_KEY = document.getElementById('customGeminiKeyInput').value.trim();
-            showToast(USER_GEMINI_KEY ? 'Chave Gemini API ativada.' : 'Usando chave do ambiente.');
+            showToast(USER_GEMINI_KEY ? 'Chave Gemini API ativada.' : 'Usando modo local/consulta.');
         };
 
         window.copyDeployTemplate = function() {
@@ -3775,7 +3733,6 @@ let USER_GEMINI_KEY = "SUA_GEMINI_API_KEY";`;
             showToast('Configuração copiada!');
         };
 
-        // Helpers
         function escapeHtml(str) {
             if (!str) return '';
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
