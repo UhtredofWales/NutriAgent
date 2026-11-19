@@ -383,6 +383,30 @@
                         </div>
                     </div>
 
+                    <!-- CONSULTA DOS DIAS & HISTÓRICO DO QUE COMEU EM CADA DIA -->
+                    <div id="dayHistoryBrowserCard" class="bg-obsidian-850 border border-obsidian-700 rounded-xl p-4 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-obsidian-700/80 pb-2.5">
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-lg bg-electric-500/15 border border-electric-500/30 text-electric-400 flex items-center justify-center">
+                                    <i data-lucide="calendar-search" class="w-4 h-4"></i>
+                                </span>
+                                <div>
+                                    <h3 class="text-xs font-bold uppercase tracking-wider text-white">Consulta dos Dias • O Que Você Comeu Cada Dia</h3>
+                                    <p class="text-[11px] text-slate-400">Selecione qualquer dia registrado ou filtre por alimento/marca para inspecionar o consumo diário</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <select id="historyDaySelect" onchange="selectHistoryDay(this.value)" class="bg-obsidian-950 border border-obsidian-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-white focus:outline-none focus:border-electric-400">
+                                </select>
+                                <input type="text" id="historyFilterInput" oninput="renderDayHistoryBrowser()" placeholder="Filtrar dia ou alimento..." class="bg-obsidian-950 border border-obsidian-700 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-electric-400 w-44 sm:w-52" />
+                            </div>
+                        </div>
+
+                        <div id="historySelectedDaySummary" class="grid grid-cols-1 lg:grid-cols-12 gap-3 text-xs">
+                            <!-- Populated dynamically with selected day meals & days index -->
+                        </div>
+                    </div>
+
                     <!-- SPECIALIST INSIGHTS, ALERTS & FOOD/BRAND QUALITY ENGINE -->
                     <div id="specialistInsightsCard" class="bg-obsidian-850 border border-obsidian-700 rounded-xl p-4 space-y-3">
                         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-obsidian-700/80 pb-2.5">
@@ -785,7 +809,7 @@
                     <button type="button" onclick="toggleVoiceLookupMode(false)" class="text-[10px] font-mono text-slate-400 hover:text-white">Fechar</button>
                 </div>
                 <div class="flex items-center gap-1.5">
-                    <input type="text" id="lookupQueryInput" onkeydown="if(event.key==='Enter'){event.preventDefault();runNutritionLookup();}" placeholder="Ex: 100g patinho moído ou buscar iogurte grego light..." class="flex-1 px-3 py-1.5 text-xs bg-obsidian-950 border border-obsidian-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-electric-400" />
+                    <input type="text" id="lookupQueryInput" onkeydown="if(event.key==='Enter'){event.preventDefault();runNutritionLookup();}" placeholder="Ex: 100g patinho moído, ontem ou o que comi dia 17..." class="flex-1 px-3 py-1.5 text-xs bg-obsidian-950 border border-obsidian-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-electric-400" />
                     <button type="button" onclick="startVoiceInput('lookup')" id="lookupMicBtn" class="p-1.5 rounded-lg bg-obsidian-850 hover:bg-obsidian-800 border border-electric-500/40 text-electric-400 transition" title="Falar consulta nutricional">
                         <i data-lucide="mic" class="w-4 h-4"></i>
                     </button>
@@ -793,6 +817,8 @@
                         Consultar
                     </button>
                 </div>
+                <div id="lookupResultsContainer" class="max-h-48 overflow-y-auto space-y-1.5"></div>
+            </div>
                 <div id="lookupResultsContainer" class="max-h-44 overflow-y-auto space-y-1.5"></div>
             </div>
 
@@ -1941,13 +1967,185 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 speakAgentReply(res.reply);
             } catch (err) {
                 removeTypingIndicator(typingId);
-                const fallbackReply = buildOfflineFallbackResponse(text, imageObj);
-                appendAgentMessage(fallbackReply, [], [], null);
-                speakAgentReply(fallbackReply);
+                const fallbackResult = await runIntelligentFallbackAgent(text, imageObj);
+                appendAgentMessage(fallbackResult.reply, fallbackResult.loggedCards || [], fallbackResult.savedLabels || [], fallbackResult.workoutToLog || null);
+                speakAgentReply(fallbackResult.reply);
             } finally {
                 sendBtn.disabled = false;
             }
         };
+
+        function formatDaySummaryText(dateIso) {
+            const logs = state.logs.filter(l => l.date === dateIso);
+            const workouts = state.workouts.filter(w => w.date === dateIso);
+            const metrics = state.dailyMetrics[dateIso] || {};
+            if (logs.length === 0 && workouts.length === 0) {
+                return `Em ${dateIso}: nenhum alimento ou treino registrado.`;
+            }
+            const kcal = Math.round(logs.reduce((s, i) => s + Number(i.kcal || 0), 0));
+            const prot = logs.reduce((s, i) => s + Number(i.prot || 0), 0).toFixed(1);
+            const carb = logs.reduce((s, i) => s + Number(i.carb || 0), 0).toFixed(1);
+            const fat = logs.reduce((s, i) => s + Number(i.fat || 0), 0).toFixed(1);
+            const burn = Math.round(workouts.reduce((s, w) => s + Number(w.kcal || 0), 0));
+            const foodList = logs.map(i => `• [${i.meal}] ${i.grams}g ${i.name} (${i.brand}) — ${Math.round(i.kcal)} kcal (P:${i.prot}g C:${i.carb}g G:${i.fat}g)`).join('\n');
+            const bioLine = metrics.weight ? `Peso: ${metrics.weight}kg` + (metrics.bf ? ` | BF: ${metrics.bf}%` : '') : '';
+            const wkLine = burn > 0 ? `\nTreinos: -${burn} kcal` : '';
+            return `📅 Dia ${dateIso} — Total: ${kcal} kcal (P:${prot}g | C:${carb}g | G:${fat}g)${bioLine ? ' • ' + bioLine : ''}${wkLine}\n${foodList || 'Sem refeições lançadas.'}`;
+        }
+
+        async function runIntelligentFallbackAgent(userText, imageObj) {
+            const raw = (userText || '').trim();
+            const lower = raw.toLowerCase();
+
+            if (imageObj) {
+                return {
+                    reply: imageObj.intent === 'label'
+                        ? 'Imagem de rótulo recebida. Como a chave da API Gemini não está ativa no momento, você pode cadastrar os valores na aba Base Verificada (ou colar/aplicar sua API Key em Protocolo & Cloud) e já lançar por aqui.'
+                        : 'Foto de prato recebida. Quais alimentos você colocou, qual a marca (quando houver rótulo) e quantas gramas de cada item? Se preferir, configure sua API Key em Protocolo & Cloud para leitura automática por visão.',
+                    loggedCards: [],
+                    savedLabels: [],
+                    workoutToLog: null
+                };
+            }
+
+            if (!raw) {
+                return {
+                    reply: 'Envie uma mensagem com alimento, marca e gramatura, pergunte sobre um dia específico (ex: "o que eu comi ontem?") ou peça para explicar suas métricas.',
+                    loggedCards: [],
+                    savedLabels: [],
+                    workoutToLog: null
+                };
+            }
+
+            // 1. Query about a specific day or meals eaten on days
+            const dateMatch = raw.match(/\b(\d{4}-\d{2}-\d{2})\b/) || raw.match(/\bdia\s+(\d{1,2})(?:\/(\d{1,2}))?\b/i);
+            if (lower.includes('ontem') || lower.includes('que eu comi') || lower.includes('o que comi') || lower.includes('consulta') || lower.includes('dias') || dateMatch) {
+                let targetDate = state.activeDate;
+                if (lower.includes('ontem')) {
+                    targetDate = getIsoOffset(1);
+                } else if (dateMatch) {
+                    if (dateMatch[0].includes('-')) {
+                        targetDate = dateMatch[0];
+                    } else {
+                        const dayNum = String(dateMatch[1]).padStart(2, '0');
+                        const monthNum = dateMatch[2] ? String(dateMatch[2]).padStart(2, '0') : state.activeDate.slice(5, 7);
+                        const yearNum = state.activeDate.slice(0, 4);
+                        targetDate = `${yearNum}-${monthNum}-${dayNum}`;
+                    }
+                }
+                const availableDates = Array.from(new Set([
+                    ...state.logs.map(l => l.date),
+                    ...state.workouts.map(w => w.date),
+                    state.activeDate
+                ])).sort().reverse();
+
+                const summaryText = formatDaySummaryText(targetDate);
+                return {
+                    reply: `${summaryText}\n\nDias registrados no histórico: ${availableDates.slice(0, 8).join(', ')}. Você também pode selecionar qualquer dia no painel "Consulta dos Dias".`,
+                    loggedCards: [],
+                    savedLabels: [],
+                    workoutToLog: null
+                };
+            }
+
+            // 2. Water command
+            const waterMatch = raw.match(/(?:água|agua|h2o|bebi).*?(\d{2,4})\s*ml/i) || raw.match(/^\+?(\d{2,4})\s*ml$/i);
+            if (waterMatch) {
+                const ml = Number(waterMatch[1]);
+                if (ml > 0) {
+                    await addWater(ml);
+                    return {
+                        reply: `Registrei +${ml} ml de água para o dia ${state.activeDate}. Manter a hidratação estável apoia volume sanguíneo, termorregulação e desempenho nos treinos.`,
+                        loggedCards: [],
+                        savedLabels: [],
+                        workoutToLog: null
+                    };
+                }
+            }
+
+            // 3. Metrics & quality explanation
+            if (lower.includes('métrica') || lower.includes('metrica') || lower.includes('tmb') || lower.includes('tdee') || lower.includes('mensal') || lower.includes('qualidade') || lower.includes('mistura') || lower.includes('combin')) {
+                const { bmr, tdee } = computeMetabolicRates();
+                const monthSummary = computeMonthlyCaloriesSummary(state.activeDate);
+                const dayLogs = state.logs.filter(l => l.date === state.activeDate);
+                const dayProt = dayLogs.reduce((s, i) => s + Number(i.prot || 0), 0);
+                const dayKcal = Math.round(dayLogs.reduce((s, i) => s + Number(i.kcal || 0), 0));
+                const w = state.dailyMetrics[state.activeDate]?.weight || state.profile.weight;
+                const comboNotes = MEAL_CATEGORIES
+                    .map(m => analyzeMealCombination(m, dayLogs.filter(l => l.meal === m)))
+                    .filter(Boolean)
+                    .map(c => `• ${c.meal} (${c.status}): ${c.detail}`)
+                    .join('\n');
+
+                return {
+                    reply: `📊 Diagnóstico Especialista (${state.activeDate}):\n• TMB ${bmr} kcal | TDEE ${tdee} kcal | Fase: ${state.profile.phase}\n• Dia: ${dayKcal} / ${state.targets.kcal} kcal | Proteína: ${dayProt.toFixed(1)}g (${(dayProt / Math.max(1, w)).toFixed(2)} g/kg)\n• Mês (${monthSummary.prefix}): ${monthSummary.netKcal} / ${monthSummary.targetMonthlyKcal} kcal (Saldo: ${monthSummary.balanceKcal} kcal | Ritmo: ${monthSummary.avgDailyPace} kcal/d)\n${comboNotes ? '\n🍽️ Combinações do dia:\n' + comboNotes : ''}\n\n(Dica: insira sua API Key do Gemini em Protocolo & Cloud para análises geradas em tempo real pela IA.)`,
+                    loggedCards: [],
+                    savedLabels: [],
+                    workoutToLog: null
+                };
+            }
+
+            // 4. Template match
+            const matchedTpl = state.templates.find(t => lower.includes(t.name.toLowerCase()) || (lower.includes('shake') && t.name.toLowerCase().includes('shake')));
+            if (matchedTpl) {
+                const loggedCards = [];
+                for (const item of matchedTpl.items) {
+                    const saved = await persistMealLog({ date: state.activeDate, meal: matchedTpl.defaultMeal, ...item });
+                    loggedCards.push(saved);
+                }
+                return {
+                    reply: `Lancei o combo "${matchedTpl.name}" em ${matchedTpl.defaultMeal} com os valores salvos do seu template.`,
+                    loggedCards,
+                    savedLabels: [],
+                    workoutToLog: null
+                };
+            }
+
+            // 5. Direct match against verified food database when grams are provided
+            const gramMatch = raw.match(/(\d+(?:[.,]\d+)?)\s*(g|gr|gramas|ml)\b/i);
+            if (gramMatch) {
+                const grams = parseFloat(gramMatch[1].replace(',', '.'));
+                const cleaned = lower.replace(/(\d+(?:[.,]\d+)?)\s*(g|gr|gramas|ml)\b/gi, '').replace(/\b(de|do|da|dos|das|com|e|hoje|no|na)\b/gi, ' ').trim();
+                const found = state.foods.find(f =>
+                    cleaned.includes(f.name.toLowerCase()) ||
+                    f.name.toLowerCase().split(/\s+/).filter(w => w.length > 3).some(w => cleaned.includes(w))
+                );
+                if (found && grams > 0) {
+                    const ratio = grams / (found.baseGrams || 100);
+                    const preferredMeal = document.getElementById('defaultMealSelect')?.value;
+                    const meal = preferredMeal && preferredMeal !== 'Auto' ? preferredMeal : getAutoMealByHour();
+                    const saved = await persistMealLog({
+                        date: state.activeDate,
+                        meal,
+                        name: found.name,
+                        brand: found.brand,
+                        grams,
+                        kcal: found.kcal * ratio,
+                        prot: found.prot * ratio,
+                        carb: found.carb * ratio,
+                        fat: found.fat * ratio,
+                        baseGrams: found.baseGrams,
+                        baseKcal: found.kcal,
+                        baseProt: found.prot,
+                        baseCarb: found.carb,
+                        baseFat: found.fat
+                    });
+                    return {
+                        reply: `Calculei proporcionalmente pela sua Base Verificada (${found.name} — ${found.brand}) e lancei ${grams}g em ${meal}. Se quiser análise completa por IA, adicione sua chave Gemini em Protocolo & Cloud.`,
+                        loggedCards: [saved],
+                        savedLabels: [],
+                        workoutToLog: null
+                    };
+                }
+            }
+
+            return {
+                reply: `Para lançar com exatidão sem a chave da API Gemini ativa, informe o alimento, a marca (ex: Growth, Sadia, TACO) e a gramatura exata — ou cadastre o rótulo na aba Base Verificada.\n\nVocê também pode perguntar "o que eu comi ontem?", "o que comi no dia 17?" ou usar o painel "Consulta dos Dias". (Para ativar o modelo Gemini completo, cole sua chave em Protocolo & Cloud.)`,
+                loggedCards: [],
+                savedLabels: [],
+                workoutToLog: null
+            };
+        }
 
         function buildOfflineFallbackResponse(text, imageObj) {
             if (imageObj) {
@@ -1955,7 +2153,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                     ? 'Recebi a foto do rótulo. Para salvar com exatidão sem conexão com a IA, informe ou cadastre na aba Base Verificada: nome, marca, porção base (g/ml), calorias, proteínas, carboidratos e gorduras.'
                     : 'Recebi a foto do prato. Quais alimentos você identificou, qual a marca (quando houver rótulo) e quantas gramas de cada item você consumiu?';
             }
-            return 'Não consegui consultar a API do Gemini agora (verifique sua chave em Protocolo & Cloud ou a conexão). Você pode lançar itens diretamente pela Base Verificada, usar o Modo Consulta / Voz ou informar marca, porção e gramatura detalhada.';
+            return 'Para lançar com exatidão sem a API Gemini ativa, informe alimento, marca e gramatura, ou consulte os dias e alimentos já registrados.';
         }
 
         function appendUserMessage(text, imageObj) {
@@ -2287,9 +2485,38 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             );
 
             if (matches.length === 0) {
+                const allDates = Array.from(new Set([
+                    ...state.logs.map(l => l.date),
+                    ...state.workouts.map(w => w.date),
+                    state.activeDate
+                ])).sort().reverse();
+
+                const matchingDays = allDates.filter(d => {
+                    const dLogs = state.logs.filter(l => l.date === d);
+                    return d.includes(cleanQuery) || dLogs.some(l => l.name.toLowerCase().includes(cleanQuery) || l.brand.toLowerCase().includes(cleanQuery));
+                });
+
+                if (matchingDays.length > 0) {
+                    out.innerHTML = matchingDays.slice(0, 4).map(d => {
+                        const dLogs = state.logs.filter(l => l.date === d);
+                        const totalKcal = Math.round(dLogs.reduce((s, i) => s + Number(i.kcal || 0), 0));
+                        const itemsPreview = dLogs.map(i => `${i.grams}g ${i.name}`).join(', ') || 'Sem refeições';
+                        return `
+                            <div class="bg-obsidian-950 border border-obsidian-700 rounded-xl p-2.5 flex items-center justify-between gap-2 text-[11px] font-mono">
+                                <div>
+                                    <div class="font-bold text-white">${escapeHtml(d)} <span class="text-electric-400">(${totalKcal} kcal)</span></div>
+                                    <div class="text-[10px] text-slate-400 line-clamp-1">${escapeHtml(itemsPreview)}</div>
+                                </div>
+                                <button type="button" onclick="selectHistoryDay('${d}')" class="px-2.5 py-1 rounded-lg bg-electric-500/20 hover:bg-electric-500/30 text-electric-400 border border-electric-500/40 font-bold shrink-0">Ver Dia</button>
+                            </div>
+                        `;
+                    }).join('');
+                    return;
+                }
+
                 out.innerHTML = `
                     <div class="bg-obsidian-950 border border-obsidian-700 rounded-xl p-2.5 flex items-center justify-between gap-2 text-[11px]">
-                        <span class="text-slate-300">Não achei "${escapeHtml(raw)}" na base local. Consultar agente?</span>
+                        <span class="text-slate-300">Não achei "${escapeHtml(raw)}" na base ou nos dias. Consultar agente?</span>
                         <button type="button" onclick="sendQuickPrompt('Consulte os valores nutricionais de ${escapeHtml(raw)} e avalie sua qualidade sem lançar ainda.')" class="px-2.5 py-1 rounded-lg bg-electric-500/20 text-electric-400 border border-electric-500/40 font-mono font-bold shrink-0">Perguntar IA</button>
                     </div>
                 `;
@@ -2697,6 +2924,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
             document.getElementById('kpiWater').textContent = metrics.water || 0;
             document.getElementById('kpiWaterTarget').textContent = t.water;
 
+            renderDayHistoryBrowser();
             renderSpecialistPanel();
 
             // Workouts List
@@ -2821,6 +3049,113 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                     </div>
                 `;
             }).join('');
+        }
+
+        function getAllRecordedDates() {
+            const set = new Set([
+                state.activeDate,
+                ...state.logs.map(l => l.date).filter(Boolean),
+                ...state.workouts.map(w => w.date).filter(Boolean),
+                ...Object.keys(state.dailyMetrics || {})
+            ]);
+            return Array.from(set).sort().reverse();
+        }
+
+        window.selectHistoryDay = function(dateIso) {
+            if (!dateIso) return;
+            state.activeDate = dateIso;
+            const dateInp = document.getElementById('activeDateInput');
+            if (dateInp) dateInp.value = dateIso;
+            renderDiaryDashboard();
+            renderAnalyticsCharts();
+        };
+
+        function renderDayHistoryBrowser() {
+            const selectEl = document.getElementById('historyDaySelect');
+            const summaryEl = document.getElementById('historySelectedDaySummary');
+            if (!selectEl || !summaryEl) return;
+
+            const filterText = (document.getElementById('historyFilterInput')?.value || '').trim().toLowerCase();
+            const allDates = getAllRecordedDates();
+
+            selectEl.innerHTML = allDates.map(d => {
+                const dLogs = state.logs.filter(l => l.date === d);
+                const dKcal = Math.round(dLogs.reduce((s, i) => s + Number(i.kcal || 0), 0));
+                const selectedAttr = d === state.activeDate ? 'selected' : '';
+                return `<option value="${escapeHtml(d)}" ${selectedAttr}>${escapeHtml(d)} • ${dKcal} kcal (${dLogs.length} itens)</option>`;
+            }).join('');
+
+            const matchingDates = allDates.filter(d => {
+                if (!filterText) return true;
+                if (d.toLowerCase().includes(filterText)) return true;
+                const dLogs = state.logs.filter(l => l.date === d);
+                return dLogs.some(l =>
+                    String(l.name || '').toLowerCase().includes(filterText) ||
+                    String(l.brand || '').toLowerCase().includes(filterText) ||
+                    String(l.meal || '').toLowerCase().includes(filterText)
+                );
+            });
+
+            const currentDayLogs = state.logs.filter(l => l.date === state.activeDate);
+            const currentDayWorkouts = state.workouts.filter(w => w.date === state.activeDate);
+            const dayKcal = Math.round(currentDayLogs.reduce((s, i) => s + Number(i.kcal || 0), 0));
+            const dayProt = currentDayLogs.reduce((s, i) => s + Number(i.prot || 0), 0).toFixed(1);
+            const dayCarb = currentDayLogs.reduce((s, i) => s + Number(i.carb || 0), 0).toFixed(1);
+            const dayFat = currentDayLogs.reduce((s, i) => s + Number(i.fat || 0), 0).toFixed(1);
+            const dayBurn = Math.round(currentDayWorkouts.reduce((s, w) => s + Number(w.kcal || 0), 0));
+
+            const foodsHtml = currentDayLogs.length > 0
+                ? currentDayLogs.map(item => `
+                    <div class="flex items-center justify-between gap-2 py-1.5 px-2.5 rounded-lg bg-obsidian-850/90 border border-obsidian-700/70">
+                        <div class="min-w-0">
+                            <div class="font-semibold text-white truncate">${escapeHtml(item.name)} <span class="font-mono text-emerald-400">(${item.grams}g)</span></div>
+                            <div class="text-[10px] font-mono text-slate-400">${escapeHtml(item.meal)} • ${escapeHtml(item.brand)}</div>
+                        </div>
+                        <div class="text-right font-mono shrink-0">
+                            <div class="font-bold text-white">${Math.round(item.kcal)} kcal</div>
+                            <div class="text-[10px] text-slate-400">P:${item.prot}g C:${item.carb}g G:${item.fat}g</div>
+                        </div>
+                    </div>
+                `).join('')
+                : `<div class="text-[11px] font-mono text-slate-500 py-3 text-center">Nenhum alimento registrado em ${escapeHtml(state.activeDate)}.</div>`;
+
+            const daysListHtml = (matchingDates.length > 0 ? matchingDates : allDates).slice(0, 6).map(d => {
+                const dLogs = state.logs.filter(l => l.date === d);
+                const dKcal = Math.round(dLogs.reduce((s, i) => s + Number(i.kcal || 0), 0));
+                const dProt = dLogs.reduce((s, i) => s + Number(i.prot || 0), 0).toFixed(0);
+                const topFoods = dLogs.slice(0, 2).map(i => `${i.grams}g ${i.name}`).join(', ') || 'Sem refeições';
+                const isSelected = d === state.activeDate;
+                return `
+                    <button type="button" onclick="selectHistoryDay('${escapeHtml(d)}')" class="w-full text-left p-2.5 rounded-xl border transition ${isSelected ? 'bg-electric-500/10 border-electric-500/40' : 'bg-obsidian-850/60 border-obsidian-700/70 hover:border-obsidian-600'}">
+                        <div class="flex items-center justify-between font-mono text-[11px]">
+                            <span class="font-bold ${isSelected ? 'text-electric-400' : 'text-white'}">${escapeHtml(d)}</span>
+                            <span class="text-slate-200 font-bold">${dKcal} kcal • ${dProt}g P</span>
+                        </div>
+                        <div class="text-[10px] text-slate-400 truncate mt-0.5">${escapeHtml(topFoods)}</div>
+                    </button>
+                `;
+            }).join('');
+
+            summaryEl.innerHTML = `
+                <div class="lg:col-span-7 bg-obsidian-950/80 border border-obsidian-700/80 rounded-xl p-3 space-y-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-obsidian-800 pb-2">
+                        <span class="font-mono font-bold text-white">Consumo em ${escapeHtml(state.activeDate)}</span>
+                        <span class="font-mono text-[11px] text-emerald-400">${dayKcal} kcal${dayBurn > 0 ? ` (-${dayBurn} treino)` : ''} • P:${dayProt}g C:${dayCarb}g G:${dayFat}g</span>
+                    </div>
+                    <div class="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+                        ${foodsHtml}
+                    </div>
+                </div>
+                <div class="lg:col-span-5 bg-obsidian-950/80 border border-obsidian-700/80 rounded-xl p-3 space-y-2">
+                    <div class="flex items-center justify-between border-b border-obsidian-800 pb-2">
+                        <span class="font-mono font-bold text-slate-300 uppercase text-[10px] tracking-wider">Dias Registrados (${allDates.length})</span>
+                        <button type="button" onclick="sendQuickPrompt('Consulte todos os dias registrados e mostre o que eu comi em cada dia com total de calorias e macros.')" class="text-[10px] font-mono text-electric-400 hover:underline">Resumo no Chat</button>
+                    </div>
+                    <div class="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+                        ${daysListHtml}
+                    </div>
+                </div>
+            `;
         }
 
         window.applyMealTemplate = async function(tplId) {
