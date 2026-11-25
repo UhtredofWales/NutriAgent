@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Diário Nutricional</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='16'%20fill='%23059669'/%3E%3Cpath%20d='M46%2016C26%2016%2016%2026%2016%2040c0%203%20.6%205.600%201.600%208C20%2050%2022%2050%2024%2048c8-8%2014-12%2022-14-8%201-15%204-21%209%202-14%2010-22%2021-27z'%20fill='%23fff'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='16'%20fill='%23059669'/%3E%3Cpath%20d='M46%2016C26%2016%2016%2026%2016%2040c0%203%20.6%205.600%201.600%208C20%2050%2022%2050%2024%2048c8-8%2014-12%2022-14-8%201-15%204-21%209%202-14%2010-22%2021-27z'%20fill='%23fff'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#059669">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter & JetBrains Mono -->
@@ -85,6 +88,8 @@
         #view-diary .grid > div:hover { transform: translateY(-2px); box-shadow:0 8px 20px rgba(60,55,40,.09); }
         header { border-bottom:1px solid #E7E4DB; background:rgba(255,255,255,.92) !important; }
         .bg-emerald-500:hover, .bg-electric-500:hover { box-shadow:0 4px 12px rgba(5,150,105,.25); }
+        #chatMessages { scroll-behavior:smooth; }
+        #chatInput { resize:none; max-height:140px; }
         .no-scrollbar::-webkit-scrollbar { display:none; } .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
     </style>
 </head>
@@ -1434,6 +1439,7 @@
                     updateAuthUi(user);
                     if (user) {
                         attachFirestoreListeners(user.uid);
+                        if (!user.isAnonymous) migrateLocalToCloud(user.uid);
                     }
                 });
 
@@ -1443,9 +1449,26 @@
                     await signInAnonymously(auth);
                 }
             } catch (err) {
+                console.error('Firebase init:', err);
+                showToast('Firebase: ' + (err.code || err.message) + (err.code === 'auth/operation-not-allowed' ? ' — ative o login Anônimo no Firebase.' : ''));
                 state.useCloud = false;
                 updateAuthUi(null);
             }
+        }
+
+        async function migrateLocalToCloud(uid) {
+            const flag = 'nutri-migrated-' + uid;
+            try {
+                if (localStorage.getItem(flag)) return;
+                const root = ['artifacts', appId, 'users', uid];
+                const foods = state.foods.filter(f => !SEED_FOOD_DATABASE.some(sd => sd.id === f.id));
+                let n = 0;
+                for (const [col, arr] of [['foods', foods], ['logs', state.logs], ['workouts', state.workouts]]) {
+                    for (const it of arr) { if (!it.id) continue; await setDoc(doc(state.db, ...root, col, it.id), it, { merge: true }); n++; }
+                }
+                localStorage.setItem(flag, '1');
+                if (n) showToast(`${n} registro(s) locais enviados para a nuvem.`);
+            } catch (err) { console.error('Migração Firebase:', err); showToast('Sincronização: ' + (err.code || err.message)); }
         }
 
         window.handleGoogleAuthClick = async function() {
@@ -1466,7 +1489,8 @@
                     showToast(`Conectado como ${res.user.displayName || 'Atleta Google'}!`);
                 }
             } catch (err) {
-                showToast('Não foi possível concluir o login Google neste ambiente.');
+                console.error('Login Google:', err);
+                showToast(err.code === 'auth/unauthorized-domain' ? `Domínio não autorizado: adicione ${location.hostname} em Firebase > Authentication > Configurações > Domínios autorizados.` : 'Login Google falhou: ' + (err.code || err.message));
             }
         };
 
@@ -1702,6 +1726,8 @@
         // =========================================================================
         // 4b. BUSCA DE ALIMENTOS POR MARCA (Open Food Facts + código de barras + web/IA)
         // =========================================================================
+        const OFF_CACHE = new Map();
+        const fetchT = (u, ms = 7000) => { const c = new AbortController(); const t = setTimeout(() => c.abort(), ms); return fetch(u, { signal: c.signal }).finally(() => clearTimeout(t)); };
         const SRCH = { items: [], sel: null, seq: 0, timer: null, stream: null };
         const r1 = v => Math.round(Number(v || 0) * 10) / 10;
         const srchTxt = v => (v && typeof v === 'object') ? (v.pt || v.en || Object.values(v)[0] || '') : String(v || '');
@@ -1725,20 +1751,27 @@
             return f;
         }
         async function searchOff(q) {
+            const k = q.toLowerCase();
+            if (OFF_CACHE.has(k)) return OFF_CACHE.get(k);
+            const r = await searchOffRaw(q);
+            if (r.length) OFF_CACHE.set(k, r);
+            return r;
+        }
+        async function searchOffRaw(q) {
             const f = 'code,product_name,brands,nutriments', e = encodeURIComponent(q);
             try {
-                const r = await fetch(`https://search.openfoodfacts.org/search?q=${e}&page_size=25&fields=${f}&langs=pt`);
+                const r = await fetchT(`https://search.openfoodfacts.org/search?q=${e}&page_size=25&fields=${f}&langs=pt`);
                 if (r.ok) { const d = await r.json(); const o = (d.hits || []).map(offToFood).filter(Boolean); if (o.length) return o; }
             } catch (err) {}
             try {
-                const r = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${e}&search_simple=1&action=process&json=1&page_size=25&fields=${f}&cc=br&lc=pt`);
+                const r = await fetchT(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${e}&search_simple=1&action=process&json=1&page_size=25&fields=${f}&cc=br&lc=pt`);
                 if (r.ok) { const d = await r.json(); return (d.products || []).map(offToFood).filter(Boolean); }
             } catch (err) {}
             return [];
         }
         async function offByCode(code) {
             try {
-                const r = await fetch(`https://world.openfoodfacts.org/api/v2/product/${code}.json?fields=code,product_name,brands,nutriments`);
+                const r = await fetchT(`https://world.openfoodfacts.org/api/v2/product/${code}.json?fields=code,product_name,brands,nutriments`);
                 const d = await r.json();
                 const f = d.product ? offToFood(d.product) : null;
                 return f ? [f] : [];
@@ -1865,6 +1898,13 @@
                 bar.className = 'h-full rounded-full transition-all duration-500 ' + (n > t ? 'bg-rose-500' : 'bg-emerald-500');
             };
             new MutationObserver(upd).observe(net, { childList: true, characterData: true, subtree: true }); upd();
+        })();
+
+        (function () {
+            const el = document.getElementById('chatInput'); if (!el) return;
+            const fit = () => { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 140) + 'px'; };
+            el.addEventListener('input', fit);
+            setInterval(() => { if (!el.value && el.style.height) el.style.height = ''; }, 400);
         })();
 
         async function callGeminiNutritionAgent(userText, imageObj, audioObj = null) {
@@ -2172,6 +2212,7 @@ TOM: converse de forma natural, curta e acolhedora, como um nutricionista amigo;
             const out = [];
             for (const c of text.split(/[,;+|\n]+|\s+e\s+(?=\d)/i).map(x => x.trim()).filter(Boolean)) {
                 const ms = [...c.matchAll(new RegExp(QTY, 'gi'))];
+                if (ms.length === 1 && ms[0].index > 0 && /^\s*(de|do|da)\s/i.test(c.slice(ms[0].index + ms[0][0].length))) { out.push(c.slice(0, ms[0].index), c.slice(ms[0].index)); continue; }
                 if (ms.length <= 1) { out.push(c); continue; }
                 if (ms[0].index > 0) { const ends = ms.map(m => m.index + m[0].length); ends.forEach((e, i) => out.push(c.slice(i ? ends[i - 1] : 0, e))); }
                 else ms.forEach((m, i) => out.push(c.slice(m.index, i + 1 < ms.length ? ms[i + 1].index : c.length)));
@@ -2180,7 +2221,7 @@ TOM: converse de forma natural, curta e acolhedora, como um nutricionista amigo;
         }
         function parseItem(seg) {
             const m = seg.match(new RegExp(QTY, 'i'));
-            if (!m) return null;
+            if (!m) return { n: 1, unit: 'un', name: seg.trim(), noQty: true };
             const u = (m[2] || '').toLowerCase();
             return { n: parseFloat(m[1].replace(',', '.')), unit: (u === 'kg' || u === 'l') ? 'kg' : (u ? 'g' : 'un'), name: (seg.slice(0, m.index) + ' ' + seg.slice(m.index + m[0].length)).trim() };
         }
@@ -2196,7 +2237,7 @@ TOM: converse de forma natural, curta e acolhedora, como um nutricionista amigo;
             if (bs >= 0.99) return { food: best, origin: 'base' };
             try {
                 let ob = null, os = 0;
-                for (const h of await searchOff(qt.join(' '))) { const c = coverage(qt, h); if (c > os) { os = c; ob = h; } }
+                for (const h of await searchOff(name.split(/\s+/).filter(w => !STOP.has(normTxt(w).trim())).join(' '))) { const c = coverage(qt, h); if (c > os) { os = c; ob = h; } }
                 if (ob && os >= Math.max(0.6, bs)) {
                     const key = (ob.name + '|' + ob.brand).toLowerCase();
                     const saved = state.foods.find(x => (x.name + '|' + x.brand).toLowerCase() === key) || await persistFoodItem({ ...ob });
@@ -2207,12 +2248,13 @@ TOM: converse de forma natural, curta e acolhedora, como um nutricionista amigo;
         }
         async function parseAndLogMeal(raw) {
             const items = splitItems(raw).map(parseItem).filter(i => i && i.n > 0 && toks(i.name).length);
-            if (!items.length) return null;
+            if (!items.some(i => !i.noQty)) return null;
             const pref = document.getElementById('defaultMealSelect')?.value;
             const meal = pref && pref !== 'Auto' ? pref : getAutoMealByHour();
             const cards = [], lines = [], missing = [];
-            for (const it of items) {
-                const r = await resolveFood(it.name);
+            const resolved = await Promise.all(items.map(it => resolveFood(it.name)));
+            for (let ix = 0; ix < items.length; ix++) {
+                const it = items[ix], r = resolved[ix];
                 if (!r) { missing.push(it.name); continue; }
                 const f = r.food, base = f.baseGrams || 100;
                 const grams = it.unit === 'g' ? it.n : it.unit === 'kg' ? it.n * 1000 : it.n * base;
