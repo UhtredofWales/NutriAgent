@@ -879,6 +879,7 @@
                     <i data-lucide="camera" class="w-5 h-5"></i>
                 </button>
 
+                <button type="button" onclick="openSearchModal()" title="Buscar alimento / marca" class="p-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-emerald-400 transition shrink-0"><i data-lucide="globe" class="w-5 h-5"></i></button>
                 <button type="button" id="chatMicBtn" onclick="startVoiceInput('chat')" class="p-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-emerald-400 transition shrink-0" title="Falar por áudio (Web Speech / Gemini Áudio)">
                     <i data-lucide="mic" class="w-5 h-5"></i>
                 </button>
@@ -2160,6 +2161,72 @@ TOM: converse de forma natural, curta e acolhedora, como um nutricionista amigo;
             return `📅 Dia ${dateIso} — Total: ${kcal} kcal (P:${prot}g | C:${carb}g | G:${fat}g)${bioLine ? ' • ' + bioLine : ''}${wkLine}\n${foodList || 'Sem refeições lançadas.'}`;
         }
 
+        // ===== LEITOR DE REFEIÇÃO MULTI-ITEM (sem API) =====
+        const STOP = new Set(['de','do','da','dos','das','com','e','hoje','no','na','um','uma','uns','umas','g','gr','grs','ml','kg','grama','gramas','comi','almocei','jantei','tomei','cafe','manha']);
+        const GENERIC = new Set(['cozido','cozida','grelhado','grelhada','assado','assada','frito','frita','mexido','mexida','cru','crua','natural','fresco']);
+        const QTY = '(\\d+(?:[.,]\\d+)?)\\s*(kg|g|gr|grs|gramas?|ml|l)?(?![a-zA-Z0-9])';
+        const normTxt = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]/g, ' ');
+        const stemW = w => (w.length > 3 && w.endsWith('s')) ? w.slice(0, -1) : w;
+        const toks = t => normTxt(t).split(/\s+/).filter(w => w && !STOP.has(w) && !/^\d/.test(w)).map(stemW);
+        function splitItems(text) {
+            const out = [];
+            for (const c of text.split(/[,;+|\n]+|\s+e\s+(?=\d)/i).map(x => x.trim()).filter(Boolean)) {
+                const ms = [...c.matchAll(new RegExp(QTY, 'gi'))];
+                if (ms.length <= 1) { out.push(c); continue; }
+                if (ms[0].index > 0) { const ends = ms.map(m => m.index + m[0].length); ends.forEach((e, i) => out.push(c.slice(i ? ends[i - 1] : 0, e))); }
+                else ms.forEach((m, i) => out.push(c.slice(m.index, i + 1 < ms.length ? ms[i + 1].index : c.length)));
+            }
+            return out.map(x => x.trim()).filter(Boolean);
+        }
+        function parseItem(seg) {
+            const m = seg.match(new RegExp(QTY, 'i'));
+            if (!m) return null;
+            const u = (m[2] || '').toLowerCase();
+            return { n: parseFloat(m[1].replace(',', '.')), unit: (u === 'kg' || u === 'l') ? 'kg' : (u ? 'g' : 'un'), name: (seg.slice(0, m.index) + ' ' + seg.slice(m.index + m[0].length)).trim() };
+        }
+        const coverage = (qt, f) => {
+            const ft = new Set(toks(f.name + ' ' + f.brand)), req = qt.filter(t => !GENERIC.has(t));
+            return req.length ? req.filter(t => ft.has(t)).length / req.length : 0;
+        };
+        async function resolveFood(name) {
+            const qt = toks(name);
+            if (!qt.length) return null;
+            let best = null, bs = 0;
+            for (const f of state.foods) { const c = coverage(qt, f); if (c > bs) { bs = c; best = f; } }
+            if (bs >= 0.99) return { food: best, origin: 'base' };
+            try {
+                let ob = null, os = 0;
+                for (const h of await searchOff(qt.join(' '))) { const c = coverage(qt, h); if (c > os) { os = c; ob = h; } }
+                if (ob && os >= Math.max(0.6, bs)) {
+                    const key = (ob.name + '|' + ob.brand).toLowerCase();
+                    const saved = state.foods.find(x => (x.name + '|' + x.brand).toLowerCase() === key) || await persistFoodItem({ ...ob });
+                    return { food: saved, origin: 'off' };
+                }
+            } catch (err) {}
+            return best && bs >= 0.5 ? { food: best, origin: 'approx' } : null;
+        }
+        async function parseAndLogMeal(raw) {
+            const items = splitItems(raw).map(parseItem).filter(i => i && i.n > 0 && toks(i.name).length);
+            if (!items.length) return null;
+            const pref = document.getElementById('defaultMealSelect')?.value;
+            const meal = pref && pref !== 'Auto' ? pref : getAutoMealByHour();
+            const cards = [], lines = [], missing = [];
+            for (const it of items) {
+                const r = await resolveFood(it.name);
+                if (!r) { missing.push(it.name); continue; }
+                const f = r.food, base = f.baseGrams || 100;
+                const grams = it.unit === 'g' ? it.n : it.unit === 'kg' ? it.n * 1000 : it.n * base;
+                const k = grams / base;
+                cards.push(await persistMealLog({ date: state.activeDate, meal, name: f.name, brand: f.brand, grams, kcal: f.kcal * k, prot: f.prot * k, carb: f.carb * k, fat: f.fat * k,
+                    baseGrams: base, baseKcal: f.kcal, baseProt: f.prot, baseCarb: f.carb, baseFat: f.fat }));
+                lines.push(`• ${Math.round(grams)}g ${f.name}${f.brand && f.brand !== 'Sem marca' ? ' (' + f.brand + ')' : ''}` + (r.origin === 'off' ? ' — tabela da marca (Open Food Facts)' : r.origin === 'approx' ? ' — aproximado, confira' : ''));
+            }
+            if (!cards.length && !missing.length) return null;
+            let reply = cards.length ? `Lancei ${cards.length} item(ns) em ${meal}:\n${lines.join('\n')}` : 'Não consegui lançar nenhum item.';
+            if (missing.length) reply += `\n\nNão encontrei: ${missing.join(', ')}. Use o botão de busca (🌐) ou cadastre pelo rótulo.`;
+            return { reply, loggedCards: cards, savedLabels: [], workoutToLog: null };
+        }
+
         async function runIntelligentFallbackAgent(userText, imageObj) {
             const raw = (userText || '').trim();
             const lower = raw.toLowerCase();
@@ -2267,6 +2334,10 @@ TOM: converse de forma natural, curta e acolhedora, como um nutricionista amigo;
                     workoutToLog: null
                 };
             }
+
+            // 5. Multi-item com busca de marca (Open Food Facts)
+            const multi = await parseAndLogMeal(raw);
+            if (multi) return multi;
 
             // 5. Direct match against verified food database when grams are provided
             const gramMatch = raw.match(/(\d+(?:[.,]\d+)?)\s*(g|gr|gramas|ml)\b/i);
