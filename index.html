@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NutriAgent PRO | Telemetry & Precision Nutrition</title>
+    <title>Diário Nutricional</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Chart.js for Analytical Telemetry -->
@@ -22,34 +22,34 @@
                 extend: {
                     colors: {
                         obsidian: {
-                            950: '#05080F',
-                            900: '#070B14',
-                            850: '#0B1120',
-                            800: '#111827',
-                            700: '#1E293B',
-                            600: '#334155'
+                            950: '#FFFFFF',
+                            900: '#F6F5F1',
+                            850: '#FFFFFF',
+                            800: '#F0EEE8',
+                            700: '#E2DFD6',
+                            600: '#C9C5B8'
                         },
                         emerald: {
-                            400: '#34D399',
-                            500: '#10B981',
-                            600: '#059669'
+                            400: '#047857',
+                            500: '#059669',
+                            600: '#047857'
                         },
                         electric: {
-                            400: '#38BDF8',
-                            500: '#0EA5E9'
+                            400: '#0369A1',
+                            500: '#0284C7'
                         },
                         amber: {
-                            400: '#FBBF24',
-                            500: '#F59E0B'
+                            400: '#B45309',
+                            500: '#D97706'
                         },
                         violet: {
-                            400: '#A78BFA',
-                            500: '#818CF8'
+                            400: '#6D28D9',
+                            500: '#7C3AED'
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
+                        sans: ['Figtree', 'sans-serif'],
+                        mono: ['Figtree', 'sans-serif']
                     }
                 }
             }
@@ -57,61 +57,35 @@
     </script>
 
     <style>
-        body {
-            background-color: #070B14;
-            color: #F1F5F9;
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .tabular-nums {
-            font-variant-numeric: tabular-nums;
-        }
-        .font-metric {
-            font-family: 'JetBrains Mono', monospace;
-            font-variant-numeric: tabular-nums;
-        }
-        /* Custom dark scrollbars */
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #070B14;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1E293B;
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
-        }
-        .chat-bubble-enter {
-            animation: slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .typing-dot {
-            animation: bounceDot 1.4s infinite ease-in-out both;
-        }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes bounceDot {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(0.8);
-            cursor: pointer;
-        }
+        body { background-color:#F6F5F1; color:#2B2F2C; font-family:'Figtree',sans-serif; -webkit-tap-highlight-color:transparent; }
+        .tabular-nums, .font-metric, .font-mono { font-variant-numeric: tabular-nums; }
+        .font-mono { font-family:'Figtree',sans-serif !important; }
+        .uppercase { text-transform:none !important; }
+        .tracking-wider, .tracking-widest, .tracking-tight { letter-spacing:0 !important; }
+        .text-white, .hover\:text-white:hover { color:#1F2421 !important; }
+        .bg-emerald-500 .text-white, .bg-electric-500 .text-white { color:#fff !important; }
+        .text-slate-100 { color:#2B2F2C !important; } .text-slate-200 { color:#3A3F3B !important; }
+        .text-slate-300 { color:#4B514C !important; } .text-slate-400 { color:#6B7068 !important; }
+        .text-slate-500 { color:#8A8F86 !important; }
+        header, section > div, .rounded-xl, .rounded-2xl { box-shadow:0 1px 2px rgba(60,55,40,.05); }
+        .backdrop-blur-xs, .backdrop-blur-sm, .backdrop-blur-md { backdrop-filter:none !important; }
+        ::-webkit-scrollbar { width:6px; height:6px; } ::-webkit-scrollbar-track { background:transparent; }
+        ::-webkit-scrollbar-thumb { background:#D5D1C4; border-radius:9999px; } ::-webkit-scrollbar-thumb:hover { background:#B9B4A3; }
+        .chat-bubble-enter { animation: slideUp .22s cubic-bezier(.16,1,.3,1); }
+        @keyframes slideUp { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+        .typing-dot { animation: bounceDot 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1){animation-delay:-.32s;} .typing-dot:nth-child(2){animation-delay:-.16s;}
+        @keyframes bounceDot { 0%,80%,100%{transform:scale(0);} 40%{transform:scale(1);} }
+        body { background:linear-gradient(180deg,#F8F7F3,#EFEDE6) fixed; }
+        .rounded-xl { border-radius:16px !important; } .rounded-2xl { border-radius:22px !important; }
+        button { transition: transform .12s ease, background-color .15s ease, border-color .15s ease, box-shadow .15s ease; }
+        button:active { transform: scale(.97); }
+        input:focus, select:focus, textarea:focus { outline:none !important; border-color:#059669 !important; box-shadow:0 0 0 3px rgba(5,150,105,.16); }
+        #view-diary .grid > div { transition: transform .15s ease, box-shadow .15s ease; }
+        #view-diary .grid > div:hover { transform: translateY(-2px); box-shadow:0 8px 20px rgba(60,55,40,.09); }
+        header { border-bottom:1px solid #E7E4DB; background:rgba(255,255,255,.92) !important; }
+        .bg-emerald-500:hover, .bg-electric-500:hover { box-shadow:0 4px 12px rgba(5,150,105,.25); }
+        .no-scrollbar::-webkit-scrollbar { display:none; } .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden bg-obsidian-900 text-slate-100">
@@ -119,12 +93,12 @@
     <!-- TOP TELEMETRY COCKPIT HEADER -->
     <header class="bg-obsidian-950 border-b border-obsidian-700 px-3 sm:px-5 py-2.5 flex items-center justify-between shrink-0 z-30">
         <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-electric-500 flex items-center justify-center text-obsidian-950 font-mono font-extrabold text-base shadow-lg shadow-emerald-500/10">
-                NA
+            <div class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center text-obsidian-950 font-mono font-extrabold text-base shadow-lg shadow-emerald-500/10">
+                N
             </div>
             <div>
                 <div class="flex items-center gap-2">
-                    <h1 class="font-bold text-sm sm:text-base tracking-tight text-white">NutriAgent <span class="text-emerald-400 font-mono text-xs">PRO</span></h1>
+                    <h1 class="font-bold text-sm sm:text-base tracking-tight text-white">Diário Nutricional</h1>
                     <span id="phaseBadge" onclick="switchMainTab('protocol')" class="cursor-pointer text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-violet-500/15 text-violet-400 border border-violet-500/30 hover:bg-violet-500/25 transition" title="Clique para alterar fase do protocolo">
                         RECOMPOSIÇÃO
                     </span>
@@ -222,6 +196,7 @@
                         <i data-lucide="dumbbell" class="w-3.5 h-3.5"></i>
                         + Treino
                     </button>
+                    <button type="button" onclick="openSearchModal()" class="text-[11px] font-semibold bg-electric-500 hover:bg-electric-400 text-obsidian-950 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition"><i data-lucide="search" class="w-3.5 h-3.5"></i>Buscar Alimento</button>
                     <button type="button" onclick="openAddFoodModal()" class="text-[11px] font-semibold bg-emerald-500 hover:bg-emerald-600 text-obsidian-950 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition">
                         <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                         Novo Rótulo
@@ -254,6 +229,7 @@
                                 <div class="text-[10px] font-mono text-slate-400 mt-0.5">
                                     In: <span id="kpiInKcal" class="text-slate-200">0</span> • Out: <span id="kpiOutKcal" class="text-violet-400">-0</span>
                                 </div>
+                                <div class="h-1.5 rounded-full bg-obsidian-800 mt-2 overflow-hidden"><div id="kcalBar" class="h-full w-0 rounded-full bg-emerald-500 transition-all duration-500"></div></div>
                             </div>
                             <div class="w-full h-1.5 bg-obsidian-950 rounded-full overflow-hidden mt-2.5">
                                 <div id="kpiKcalBar" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -415,7 +391,7 @@
                                     <i data-lucide="sparkles" class="w-4 h-4"></i>
                                 </span>
                                 <div>
-                                    <h3 class="text-xs font-bold uppercase tracking-wider text-white">Especialista Dedicado • Insights, Alertas & Combinações</h3>
+                                    <h3 class="text-xs font-bold uppercase tracking-wider text-white">Dicas do dia</h3>
                                     <p class="text-[11px] text-slate-400">Leitura de métricas, qualidade de marcas/rótulos, sinergia de misturas e alertas do protocolo</p>
                                 </div>
                             </div>
@@ -738,7 +714,7 @@
                             </div>
                             <div class="bg-obsidian-950/80 p-3.5 rounded-xl border border-obsidian-700">
                                 <div class="font-mono font-bold text-violet-400 mb-1">03. GEMINI MULTIMODAL</div>
-                                <p class="text-slate-400 leading-relaxed">Insira sua chave do Google AI Studio em <code class="text-white">USER_GEMINI_KEY</code> ou aplique abaixo para testar na Vercel.</p>
+                                <p class="text-slate-400 leading-relaxed">Insira sua chave do Google AI Studio em <code class="text-white">USER_GEMINI_KEY</code> (opcional) ou aplique abaixo para testar na Vercel.</p>
                             </div>
                         </div>
 
@@ -829,7 +805,7 @@
                     </div>
                     <div class="bg-obsidian-850 border border-obsidian-700 rounded-2xl rounded-tl-sm p-3.5 text-xs text-slate-300 max-w-[90%] space-y-2 leading-relaxed">
                         <div class="flex items-center justify-between border-b border-obsidian-700 pb-1.5">
-                            <span class="font-mono font-bold text-emerald-400 text-[11px]">TELEMETRIA ATIVA • MODO PRECISÃO</span>
+                            <span class="font-mono font-bold text-emerald-400 text-[11px]">Resumo do dia</span>
                             <span class="font-mono text-[10px] text-slate-500">v2.4 PRO</span>
                         </div>
                         <p>
@@ -922,6 +898,26 @@
     <!-- ===================================================================== -->
     <!-- MODALS (FOOD DB, QUICK LOG, WORKOUT, BIOMETRICS)                      -->
     <!-- ===================================================================== -->
+
+    <!-- MODAL: BUSCA DE ALIMENTOS (estilo FitnessPal) -->
+    <div id="searchModal" class="hidden fixed inset-0 bg-black/75 z-50 flex items-start sm:items-center justify-center p-3 overflow-y-auto">
+        <div class="bg-obsidian-850 border border-obsidian-700 rounded-2xl max-w-lg w-full p-4 shadow-2xl space-y-3 my-4">
+            <div class="flex items-center justify-between border-b border-obsidian-700 pb-2">
+                <h3 class="font-bold text-sm text-white">Buscar Alimento ou Marca</h3>
+                <button type="button" onclick="closeSearchModal()" class="p-1 text-slate-400 hover:text-white rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="flex gap-2">
+                <input type="text" id="srchInput" oninput="srchDebounce()" onkeydown="if(event.key==='Enter'){event.preventDefault();runSearch();}" placeholder="Ex: whey growth, iogurte danone, 7891000100103" class="flex-1 px-3 py-2 bg-obsidian-950 border border-obsidian-700 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500" />
+                <button type="button" onclick="scanBarcode()" title="Escanear código de barras" class="px-3 rounded-xl bg-obsidian-950 border border-obsidian-700 text-sm hover:border-emerald-500">📷</button>
+            </div>
+            <video id="srchVideo" class="hidden w-full rounded-xl bg-black" playsinline muted></video>
+            <div id="srchStatus" class="text-[10px] font-mono text-slate-500"></div>
+            <div id="srchResults" class="space-y-1.5 max-h-60 overflow-y-auto no-scrollbar"></div>
+            <div class="flex gap-2"><select id="srchCopyMeal" class="flex-1 px-2 py-2 bg-obsidian-950 border border-obsidian-700 rounded-xl text-[11px] text-white"></select><button type="button" onclick="copyYesterday()" class="text-[11px] font-semibold px-3 py-2 rounded-xl bg-obsidian-800 border border-obsidian-700 hover:border-emerald-500">↺ Copiar de ontem</button></div>
+            <button type="button" onclick="manualFromSearch()" class="w-full text-[11px] font-semibold py-2 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 hover:bg-emerald-500/20 transition">✍️ Não achou? Cadastrar pelo rótulo da embalagem</button>
+            <div id="srchDetail" class="hidden border-t border-obsidian-700 pt-3 space-y-2 text-xs"></div>
+        </div>
+    </div>
 
     <!-- MODAL 1: CADASTRAR / EDITAR ALIMENTO NA BASE -->
     <div id="foodModal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-xs z-50 flex items-center justify-center p-4">
@@ -1100,9 +1096,16 @@
     <!-- FIREBASE, CHART.JS & APPLICATION LOGIC                                -->
     <!-- ===================================================================== -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Firebase é opcional: se o CDN estiver bloqueado/offline, o app segue em modo local.
+        let initializeApp, getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
+            getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection;
+        try {
+            const FB = 'https://www.gstatic.com/firebasejs/11.6.1/';
+            const [A, B, C] = await Promise.all([import(FB + 'firebase-app.js'), import(FB + 'firebase-auth.js'), import(FB + 'firebase-firestore.js')]);
+            ({ initializeApp } = A);
+            ({ getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } = B);
+            ({ getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection } = C);
+        } catch (e) { window.__FB_FAIL = true; console.warn('Firebase indisponível — modo local.', e); }
 
         // =========================================================================
         // 1. CONFIGURAÇÃO FIREBASE & API GEMINI
@@ -1411,7 +1414,7 @@
             loadStateFromLocal();
             renderAll();
 
-            if (!firebaseConfig || !firebaseConfig.apiKey) {
+            if (window.__FB_FAIL || !firebaseConfig || !firebaseConfig.apiKey) {
                 state.useCloud = false;
                 updateAuthUi(null);
                 return;
@@ -1695,7 +1698,176 @@
         // =========================================================================
         // 5. AGENTE ANALÍTICO MULTIMODAL (GEMINI API - TEXTO, IMAGEM & ÁUDIO)
         // =========================================================================
+        // =========================================================================
+        // 4b. BUSCA DE ALIMENTOS POR MARCA (Open Food Facts + código de barras + web/IA)
+        // =========================================================================
+        const SRCH = { items: [], sel: null, seq: 0, timer: null, stream: null };
+        const r1 = v => Math.round(Number(v || 0) * 10) / 10;
+        const srchTxt = v => (v && typeof v === 'object') ? (v.pt || v.en || Object.values(v)[0] || '') : String(v || '');
+        function guessCat(f) {
+            const t = (f.name + ' ' + f.brand).toLowerCase();
+            if (/whey|creatina|bcaa|albumina|suplemento|pré-treino|pre-treino/.test(t)) return 'Suplementos';
+            if (/leite|iogurte|queijo|requeij|coalhada/.test(t)) return 'Laticínios';
+            if (f.prot >= 15) return 'Proteínas';
+            if (f.fat > f.carb && f.fat > f.prot) return 'Gorduras';
+            return 'Carboidratos';
+        }
+        function offToFood(p) {
+            const n = p.nutriments || {};
+            const name = srchTxt(p.product_name).trim();
+            let kcal = n['energy-kcal_100g'];
+            if (kcal == null && n['energy_100g'] != null) kcal = n['energy_100g'] / 4.184;
+            if (!name || kcal == null) return null;
+            const brand = (Array.isArray(p.brands) ? (p.brands[0] || '') : String(p.brands || '').split(',')[0]).trim();
+            const f = { name, brand: brand || 'Sem marca', baseGrams: 100, kcal: r1(kcal), prot: r1(n['proteins_100g']), carb: r1(n['carbohydrates_100g']), fat: r1(n['fat_100g']), source: 'Open Food Facts' };
+            f.category = guessCat(f);
+            return f;
+        }
+        async function searchOff(q) {
+            const f = 'code,product_name,brands,nutriments', e = encodeURIComponent(q);
+            try {
+                const r = await fetch(`https://search.openfoodfacts.org/search?q=${e}&page_size=25&fields=${f}&langs=pt`);
+                if (r.ok) { const d = await r.json(); const o = (d.hits || []).map(offToFood).filter(Boolean); if (o.length) return o; }
+            } catch (err) {}
+            try {
+                const r = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${e}&search_simple=1&action=process&json=1&page_size=25&fields=${f}&cc=br&lc=pt`);
+                if (r.ok) { const d = await r.json(); return (d.products || []).map(offToFood).filter(Boolean); }
+            } catch (err) {}
+            return [];
+        }
+        async function offByCode(code) {
+            try {
+                const r = await fetch(`https://world.openfoodfacts.org/api/v2/product/${code}.json?fields=code,product_name,brands,nutriments`);
+                const d = await r.json();
+                const f = d.product ? offToFood(d.product) : null;
+                return f ? [f] : [];
+            } catch (err) { return []; }
+        }
+        function recentFoods() {
+            const seen = new Set(), out = [];
+            for (const l of [...state.logs].reverse()) {
+                const k = (l.name + '|' + l.brand).toLowerCase();
+                if (seen.has(k)) continue;
+                seen.add(k);
+                const ex = state.foods.find(x => (x.name + '|' + x.brand).toLowerCase() === k);
+                out.push(ex ? { ...ex } : { name: l.name, brand: l.brand, baseGrams: l.baseGrams || 100, kcal: l.baseKcal, prot: l.baseProt, carb: l.baseCarb, fat: l.baseFat, source: 'Recente' });
+                if (out.length >= 12) break;
+            }
+            return out;
+        }
+        function renderSearch(items, status) {
+            SRCH.items = items;
+            document.getElementById('srchStatus').textContent = status || '';
+            document.getElementById('srchResults').innerHTML = items.length ? items.map((f, i) => `
+                <button type="button" onclick="selectSearchFood(${i})" class="w-full text-left px-3 py-2 rounded-xl bg-obsidian-950 border border-obsidian-700 hover:border-emerald-500 transition">
+                    <div class="flex justify-between gap-2"><span class="font-semibold text-white text-xs truncate">${escapeHtml(f.name)}</span><span class="font-mono text-[10px] text-amber-400 shrink-0">${escapeHtml(f.source || 'Base')}</span></div>
+                    <div class="text-[10px] font-mono text-slate-400">${escapeHtml(f.brand)} · ${f.baseGrams}g: ${f.kcal} kcal · P ${f.prot} · C ${f.carb} · G ${f.fat}</div>
+                </button>`).join('') : '<div class="text-[11px] text-slate-500 py-3 text-center">Nada encontrado. Tente outra grafia ou use a busca na web abaixo.</div>';
+        }
+        window.openSearchModal = function () {
+            document.getElementById('searchModal').classList.remove('hidden');
+            document.getElementById('srchDetail').classList.add('hidden');
+            document.getElementById('srchInput').value = '';
+            renderSearch(recentFoods(), 'Recentes (toque para lançar de novo)');
+            document.getElementById('srchCopyMeal').innerHTML = MEAL_CATEGORIES.map(m => `<option ${m === getAutoMealByHour() ? 'selected' : ''}>${m}</option>`).join('');
+            lucide.createIcons();
+            setTimeout(() => document.getElementById('srchInput').focus(), 50);
+        };
+        window.closeSearchModal = function () { stopScan(); document.getElementById('searchModal').classList.add('hidden'); };
+        window.srchDebounce = function () { clearTimeout(SRCH.timer); SRCH.timer = setTimeout(runSearch, 450); };
+        window.runSearch = async function () {
+            const q = document.getElementById('srchInput').value.trim();
+            const seq = ++SRCH.seq;
+            if (!q) return renderSearch(recentFoods(), 'Recentes');
+            const toks = q.toLowerCase().split(/\s+/);
+            const hay = f => (f.name + ' ' + f.brand).toLowerCase();
+            const local = state.foods.filter(f => toks.every(t => hay(f).includes(t)));
+            renderSearch(local, 'Buscando no Open Food Facts…');
+            const remote = /^\d{8,14}$/.test(q) ? await offByCode(q) : await searchOff(q);
+            if (seq !== SRCH.seq) return;
+            const keys = new Set(local.map(f => hay(f)));
+            const extra = remote.filter(f => !keys.has(hay(f))).sort((a, b) => toks.filter(t => hay(b).includes(t)).length - toks.filter(t => hay(a).includes(t)).length);
+            renderSearch([...local, ...extra], `${local.length} na sua base · ${extra.length} no Open Food Facts`);
+        };
+        window.selectSearchFood = function (i) {
+            const f = SRCH.sel = SRCH.items[i];
+            const opts = MEAL_CATEGORIES.map(m => `<option value="${m}" ${m === getAutoMealByHour() ? 'selected' : ''}>${m}</option>`).join('');
+            const d = document.getElementById('srchDetail');
+            d.classList.remove('hidden');
+            d.innerHTML = `
+                <div class="font-bold text-white text-sm">${escapeHtml(f.name)} <span class="text-slate-400 font-normal">— ${escapeHtml(f.brand)}</span></div>
+                <div class="text-[10px] font-mono text-slate-500">Valores do rótulo por ${f.baseGrams}g (${escapeHtml(f.source || '')})</div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="srchGrams" step="1" min="1" value="${f.baseGrams}" oninput="updateSearchPreview()" class="px-3 py-2 bg-obsidian-950 border border-obsidian-700 rounded-xl font-mono font-bold text-white" />
+                    <select id="srchMeal" class="px-3 py-2 bg-obsidian-950 border border-obsidian-700 rounded-xl text-white">${opts}</select>
+                </div>
+                <div id="srchPreview" class="font-mono text-[11px] text-slate-200"></div>
+                <button type="button" onclick="addSelectedFood()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-obsidian-950 font-bold py-2 rounded-xl transition">Adicionar ao diário</button>`;
+            updateSearchPreview();
+        };
+        window.updateSearchPreview = function () {
+            const f = SRCH.sel; if (!f) return;
+            const k = (Number(document.getElementById('srchGrams').value) || 0) / (f.baseGrams || 100);
+            document.getElementById('srchPreview').innerHTML = `<strong class="text-white">${Math.round(f.kcal * k)} kcal</strong> · <span class="text-emerald-400">P ${r1(f.prot * k)}g</span> · <span class="text-electric-400">C ${r1(f.carb * k)}g</span> · <span class="text-amber-400">G ${r1(f.fat * k)}g</span>`;
+        };
+        window.addSelectedFood = async function () {
+            const f = SRCH.sel; if (!f) return;
+            const g = Number(document.getElementById('srchGrams').value) || 0;
+            if (g <= 0) return showToast('Informe as gramas.');
+            let saved = f;
+            if (!f.id) {
+                const k = (f.name + '|' + f.brand).toLowerCase();
+                saved = state.foods.find(x => (x.name + '|' + x.brand).toLowerCase() === k) || await persistFoodItem({ ...f });
+            }
+            const k = g / (saved.baseGrams || 100);
+            await persistMealLog({ date: state.activeDate, meal: document.getElementById('srchMeal').value, name: saved.name, brand: saved.brand, grams: g,
+                kcal: saved.kcal * k, prot: saved.prot * k, carb: saved.carb * k, fat: saved.fat * k,
+                baseGrams: saved.baseGrams, baseKcal: saved.kcal, baseProt: saved.prot, baseCarb: saved.carb, baseFat: saved.fat });
+            showToast(`${saved.name} lançado (${g}g).`);
+            document.getElementById('srchDetail').classList.add('hidden');
+            SRCH.sel = null;
+        };
+        window.manualFromSearch = function () { closeSearchModal(); openAddFoodModal(); };
+        window.copyYesterday = async function () {
+            const meal = document.getElementById('srchCopyMeal').value;
+            const d = new Date(state.activeDate + 'T12:00:00'); d.setDate(d.getDate() - 1);
+            const y = d.toISOString().slice(0, 10);
+            const rows = state.logs.filter(l => l.date === y && l.meal === meal);
+            if (!rows.length) return showToast(`Nada em ${meal} no dia anterior.`);
+            for (const l of rows) { const { id, ...rest } = l; await persistMealLog({ ...rest, date: state.activeDate }); }
+            showToast(`${rows.length} item(ns) copiados de ontem.`);
+        };
+        function stopScan() { if (SRCH.stream) { SRCH.stream.getTracks().forEach(t => t.stop()); SRCH.stream = null; } document.getElementById('srchVideo').classList.add('hidden'); }
+        window.scanBarcode = async function () {
+            if (!('BarcodeDetector' in window)) return showToast('Seu navegador não escaneia código de barras. Digite o EAN no campo de busca.');
+            try {
+                const v = document.getElementById('srchVideo');
+                SRCH.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                v.srcObject = SRCH.stream; v.classList.remove('hidden'); await v.play();
+                const det = new BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e'] });
+                const tick = async () => {
+                    if (!SRCH.stream) return;
+                    const c = await det.detect(v).catch(() => []);
+                    if (c.length) { stopScan(); document.getElementById('srchInput').value = c[0].rawValue; runSearch(); return; }
+                    setTimeout(tick, 300);
+                };
+                tick();
+            } catch (err) { stopScan(); showToast('Não consegui acessar a câmera.'); }
+        };
+
+        (function () {
+            const net = document.getElementById('kpiNetKcal'); if (!net) return;
+            const upd = () => {
+                const n = parseFloat(net.textContent) || 0, t = parseFloat(document.getElementById('kpiTargetKcal').textContent) || 1;
+                const bar = document.getElementById('kcalBar'); if (!bar) return;
+                bar.style.width = Math.max(0, Math.min(100, n / t * 100)) + '%';
+                bar.className = 'h-full rounded-full transition-all duration-500 ' + (n > t ? 'bg-rose-500' : 'bg-emerald-500');
+            };
+            new MutationObserver(upd).observe(net, { childList: true, characterData: true, subtree: true }); upd();
+        })();
+
         async function callGeminiNutritionAgent(userText, imageObj, audioObj = null) {
+            if (!USER_GEMINI_KEY) throw new Error('NO_KEY');
             const apiKey = USER_GEMINI_KEY || "";
             if (!apiKey) {
                 throw new Error('Missing Gemini API key');
@@ -1704,7 +1876,7 @@
 
             const currentWeight = state.dailyMetrics[state.activeDate]?.weight || state.profile.weight;
 
-            const dbSummary = state.foods.slice(0, 50).map(f =>
+            const dbSummary = state.foods.slice(0, 150).map(f =>
                 `- [${f.name} | Marca: ${f.brand} | Cat: ${f.category || 'Geral'} | Base: ${f.baseGrams}g -> ${f.kcal}kcal, P:${f.prot}g, C:${f.carb}g, G:${f.fat}g]`
             ).join('\n');
 
@@ -1753,7 +1925,7 @@ ${dbSummary}
 REFEIÇÕES COMPOSTAS / TEMPLATES SALVOS:
 ${templatesSummary}
 
-Retorne ESTRITAMENTE o JSON conforme o schema.`;
+TOM: converse de forma natural, curta e acolhedora, como um nutricionista amigo; evite jargão, listas longas e excesso de emojis.\n\nREGRA DE MARCAS: quando o usuário citar uma MARCA/produto que não esteja no catálogo, use a busca do Google para encontrar a tabela nutricional oficial daquela marca (rótulo/site do fabricante) e use esses valores — nunca estime pela tabela TACO nem invente. Salve o produto em foodsToSaveToDatabase. Se não achar dado confiável, diga isso e peça o rótulo.\n\nRetorne ESTRITAMENTE o JSON conforme o schema.`;
 
             const currentParts = [];
             if (userText && userText.trim()) {
@@ -1849,6 +2021,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                 }
             };
 
+            payload.tools = [{ google_search: {} }];
             let attempt = 0;
             const delays = [1000, 2000, 4000];
             while (attempt <= delays.length) {
@@ -1858,6 +2031,7 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
+                    if (response.status === 400 && payload.tools) { delete payload.tools; throw new Error('HTTP 400'); }
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     const data = await response.json();
                     const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -3287,10 +3461,10 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } } },
+                        plugins: { legend: { labels: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } } },
                         scales: {
-                            x: { stacked: true, grid: { color: '#1E293B' }, ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } },
-                            y: { stacked: true, grid: { color: '#1E293B' }, ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } }
+                            x: { stacked: true, grid: { color: '#E7E4DB' }, ticks: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } },
+                            y: { stacked: true, grid: { color: '#E7E4DB' }, ticks: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } }
                         }
                     }
                 });
@@ -3316,10 +3490,10 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } } },
+                        plugins: { legend: { labels: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } } },
                         scales: {
-                            x: { grid: { color: '#1E293B' }, ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } },
-                            y: { grid: { color: '#1E293B' }, ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } }
+                            x: { grid: { color: '#E7E4DB' }, ticks: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } },
+                            y: { grid: { color: '#E7E4DB' }, ticks: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } }
                         }
                     }
                 });
@@ -3344,10 +3518,10 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } } },
+                        plugins: { legend: { labels: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } } },
                         scales: {
-                            x: { grid: { color: '#1E293B' }, ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } },
-                            y: { grid: { color: '#1E293B' }, ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } }
+                            x: { grid: { color: '#E7E4DB' }, ticks: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } },
+                            y: { grid: { color: '#E7E4DB' }, ticks: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } }
                         }
                     }
                 });
@@ -3383,10 +3557,10 @@ Retorne ESTRITAMENTE o JSON conforme o schema.`;
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } } },
+                        plugins: { legend: { labels: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } } },
                         scales: {
-                            x: { grid: { color: '#1E293B' }, ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 9 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 15 } },
-                            y: { grid: { color: '#1E293B' }, ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } } }
+                            x: { grid: { color: '#E7E4DB' }, ticks: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 9 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 15 } },
+                            y: { grid: { color: '#E7E4DB' }, ticks: { color: '#6B7068', font: { family: 'JetBrains Mono', size: 10 } } }
                         }
                     }
                 });
